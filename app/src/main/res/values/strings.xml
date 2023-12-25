@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">GoDee</string>
+    <string name="login">Login Page</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="register_now">Register Now!</string>
 </resources>
