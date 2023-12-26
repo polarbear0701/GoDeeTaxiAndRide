@@ -149,7 +149,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/name"
+                android:id="@+id/profileName"
                 android:layout_weight="1"
                 android:text="Name"
                 android:textStyle="bold"
@@ -158,7 +158,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/profileName"
+                android:id="@+id/name"
                 android:text="name"
                 android:layout_weight="1"
                 android:textAlignment="viewEnd"
@@ -180,7 +180,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/email"
+                android:id="@+id/profileEmail"
                 android:layout_weight="1"
                 android:text="Email"
                 android:textStyle="bold"
@@ -189,7 +189,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/profileEmail"
+                android:id="@+id/email"
                 android:text="email"
                 android:layout_weight="1"
                 android:textAlignment="viewEnd"
@@ -211,7 +211,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/username"
+                android:id="@+id/profileUsername"
                 android:layout_weight="1"
                 android:text="Username"
                 android:textStyle="bold"
@@ -220,7 +220,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/profileUsername"
+                android:id="@+id/username"
                 android:text="username"
                 android:layout_weight="1"
                 android:textAlignment="viewEnd"
@@ -242,7 +242,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/password"
+                android:id="@+id/profilePassword"
                 android:layout_weight="1"
                 android:text="Password"
                 android:textStyle="bold"
@@ -251,7 +251,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/profilePassword"
+                android:id="@+id/password"
                 android:text="password"
                 android:layout_weight="1"
                 android:textAlignment="viewEnd"
@@ -263,7 +263,7 @@
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="60dp"
-        android:layout_marginBottom="60dp"
+        android:layout_marginBottom="4dp"
         android:gravity="center"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
