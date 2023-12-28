@@ -261,12 +261,13 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/profile_button_layout"
         android:layout_width="0dp"
         android:layout_height="60dp"
         android:layout_marginBottom="4dp"
         android:gravity="center"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent">
@@ -312,6 +313,22 @@
             app:layout_constraintEnd_toEndOf="@id/linearLayout"
             app:layout_constraintStart_toStartOf="@id/linearLayout"
             app:layout_constraintTop_toBottomOf="@id/linearLayout" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/page_navigation"
+            app:menu="@menu/navigation_menu"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/page_navigation_outline" />
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
