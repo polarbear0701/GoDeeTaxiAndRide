@@ -14,7 +14,9 @@ public class ProfileActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_profile);
+
         getSupportActionBar().hide();
 
         BottomNavigationView pageMenu = findViewById(R.id.page_navigation);
@@ -44,5 +46,5 @@ public class ProfileActivity extends AppCompatActivity {
              */
             return true;
         });
-    };
+    }
 }
