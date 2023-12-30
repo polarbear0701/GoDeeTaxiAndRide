@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -32,8 +31,8 @@ public class RegisterActivity extends AppCompatActivity {
         EditText inputName, inputPhoneNumber, inputAge, inputNationality;
         EditText inputAddressNumber, inputStreet, inputWard, inputDistrict, inputCity, inputCountry;
 
-        inputEmail = findViewById(R.id.email);
-        inputPassword = findViewById(R.id.password);
+        inputEmail = findViewById(R.id.emailSignIn);
+        inputPassword = findViewById(R.id.passwordSignIn);
         inputConfirmPassword = findViewById(R.id.passwordConfirmation);
         inputName = findViewById(R.id.name);
         inputPhoneNumber = findViewById(R.id.phoneNumber);
