@@ -1,8 +1,5 @@
 package com.example.godee;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -11,6 +8,9 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -31,8 +31,8 @@ public class RegisterActivity extends AppCompatActivity {
         EditText inputName, inputPhoneNumber, inputAge, inputNationality;
         EditText inputAddressNumber, inputStreet, inputWard, inputDistrict, inputCity, inputCountry;
 
-        inputEmail = findViewById(R.id.emailSignIn);
-        inputPassword = findViewById(R.id.passwordSignIn);
+        inputEmail = findViewById(R.id.email);
+        inputPassword = findViewById(R.id.password);
         inputConfirmPassword = findViewById(R.id.passwordConfirmation);
         inputName = findViewById(R.id.name);
         inputPhoneNumber = findViewById(R.id.phoneNumber);

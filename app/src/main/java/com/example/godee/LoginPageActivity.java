@@ -1,8 +1,5 @@
 package com.example.godee;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -11,17 +8,35 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class LoginPageActivity extends AppCompatActivity {
+
+    FirebaseAuth auth;
+
+    FirebaseUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_page);
+
+        auth = FirebaseAuth.getInstance();
+        user = auth.getCurrentUser();
+
+        if (user != null) {
+            user.getTenantId();
+            Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
+            startActivity(intent);
+            finish();
+        }
 
         TextView textView;
         Button loginButton;
@@ -38,8 +53,8 @@ public class LoginPageActivity extends AppCompatActivity {
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
-                startActivity(intent);
+                Intent returnUser = new Intent(getApplicationContext(), RegisterActivity.class);
+                startActivity(returnUser);
                 finish();
             }
         });
@@ -57,7 +72,7 @@ public class LoginPageActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()){
                             Toast.makeText(LoginPageActivity.this, "Login successfully!", Toast.LENGTH_SHORT).show();
-                            Intent toHomePage = new Intent(LoginPageActivity.this, ProfileActivity.class);
+                            Intent toHomePage = new Intent(LoginPageActivity.this, MapsActivity.class);
                             startActivity(toHomePage);
                             finish();
                         }
@@ -66,8 +81,6 @@ public class LoginPageActivity extends AppCompatActivity {
                         }
                     }
                 });
-
-
             }
         });
     }
