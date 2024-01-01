@@ -5,6 +5,6 @@
     <string name="password">Password</string>
     <string name="register_now">Register Now!</string>
     <string name="title_activity_main">MainActivity</string>
-    <string name="google_map_api_key">AIzaSyDDz3gM0Gz0Ng9gjr1KBhigIystKHJI2tU</string>
+    <string name="google_map_api_key">AIzaSyA-qGgUm9sSW2Kg8QX47yPofhaiVp14tAs</string>
     <string name="title_activity_maps">MapsActivity</string>
 </resources>
