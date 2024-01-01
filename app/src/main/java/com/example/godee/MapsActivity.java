@@ -1,30 +1,42 @@
 package com.example.godee;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import com.example.godee.databinding.ActivityMapsBinding;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+    private static final int LOCATION_PERMISSION = 99;
 
     private GoogleMap mMap;
-    private ActivityMapsBinding binding;
+    private FusedLocationProviderClient client;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        requestPermission();
+        client = LocationServices.getFusedLocationProviderClient(MapsActivity.this);
+        getUserCurrentPosition();
+
         super.onCreate(savedInstanceState);
 
-        binding = ActivityMapsBinding.inflate(getLayoutInflater());
+        com.example.godee.databinding.ActivityMapsBinding binding = ActivityMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         BottomNavigationView pageMenu = findViewById(R.id.page_navigation);
@@ -49,11 +61,45 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+
+
+        //set padding for zoom control
+        mMap.getUiSettings().setZoomControlsEnabled(true);
+        mMap.setPadding(0, 0,0, 400);
+
+
         // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-31,151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+//        LatLng sydney = new LatLng(-31,151);
+//        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
+//        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
     }
+
+    //get permission for location
+    private void requestPermission(){
+        ActivityCompat.requestPermissions(MapsActivity.this,new String[]{
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.INTERNET
+        }, 99);
+    }
+
+
+    @SuppressLint("MissingPermission")
+    public void getUserCurrentPosition(){
+        client.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
+            @Override
+            public void onSuccess(Location location) {
+                LatLng userCurrentLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                mMap.addMarker(new MarkerOptions().position(userCurrentLocation).title("Your location"));
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(userCurrentLocation));
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userCurrentLocation, 15));
+            }
+        });
+    }
+
+
+
+
 
 
     // Function for page navigation (bottom navigation bar)
