@@ -32,7 +32,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         requestPermission();
         client = LocationServices.getFusedLocationProviderClient(MapsActivity.this);
-        getUserCurrentPosition();
 
         super.onCreate(savedInstanceState);
 
@@ -61,6 +60,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        getUserCurrentPosition();
 
 
         //set padding for zoom control
