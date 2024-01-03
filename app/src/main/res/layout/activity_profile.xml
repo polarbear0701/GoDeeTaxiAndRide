@@ -128,7 +128,6 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/profileName"
                 android:layout_weight="1"
                 android:text="Name"
                 android:textStyle="bold"
@@ -137,7 +136,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/name"
+                android:id="@+id/profileName"
                 android:text="name"
                 android:layout_weight="1"
                 android:textAlignment="viewEnd"
@@ -159,7 +158,6 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/profileEmail"
                 android:layout_weight="1"
                 android:text="Email"
                 android:textStyle="bold"
@@ -168,7 +166,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/emailSignIn"
+                android:id="@+id/profileEmail"
                 android:text="email"
                 android:layout_weight="1"
                 android:textAlignment="viewEnd"
@@ -312,5 +310,6 @@
             android:background="@drawable/page_navigation_outline" />
 
     </LinearLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
