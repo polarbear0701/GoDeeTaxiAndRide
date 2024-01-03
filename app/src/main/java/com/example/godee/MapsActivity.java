@@ -97,11 +97,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
     }
 
-
-
-
-
-
     // Function for page navigation (bottom navigation bar)
     public void pageNavigation(BottomNavigationView pageMenu) {
         pageMenu.setOnItemSelectedListener(item ->

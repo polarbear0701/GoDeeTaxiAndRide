@@ -16,28 +16,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/titleName"
-        android:layout_marginTop="10dp"
-        android:text="Name"
-        android:textColor="@color/white"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="@id/profileImg"
-        app:layout_constraintStart_toStartOf="@id/profileImg"
-        app:layout_constraintTop_toBottomOf="@id/profileImg"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/titleUsername"
-        android:text="username"
-        android:textColor="@color/white"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="@id/titleName"
-        app:layout_constraintStart_toStartOf="@id/titleName"
-        app:layout_constraintTop_toBottomOf="@id/titleName"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -50,7 +28,8 @@
         android:layout_marginTop="30dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/titleUsername">
+        app:layout_constraintTop_toBottomOf="@id/profileImg"
+        app:layout_constraintBottom_toTopOf="@+id/profile_button_layout">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -270,6 +249,7 @@
         app:layout_constraintTop_toBottomOf="@+id/linearLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintBottom_toTopOf="@+id/profile_navigation_bar"
         app:layout_constraintStart_toStartOf="parent">
 
         <Button
@@ -287,12 +267,13 @@
             app:layout_constraintTop_toBottomOf="@id/linearLayout" />
 
         <Button
+            android:id="@+id/logoutButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_margin="5dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="Book"
+            android:text="Log Out"
             android:textSize="16sp"
             app:cornerRadius="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -315,6 +296,7 @@
             app:layout_constraintTop_toBottomOf="@id/linearLayout" />
     </LinearLayout>
     <LinearLayout
+        android:id="@+id/profile_navigation_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
