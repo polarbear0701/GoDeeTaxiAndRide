@@ -7,6 +7,7 @@ public class UserModel {
     private int age;
     private String nationality;
     private Address address;
+    private Double latitude, longitude;
 
     public UserModel() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
@@ -68,4 +69,95 @@ public class UserModel {
     public void setAddress(Address address) {
         this.address = address;
     }
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
+    }
 }
+
+//package com.example.godee;
+
+class Address {
+    private String addressNumber;
+    private String street;
+    private String ward; // Optional
+    private String district;
+    private String city;
+    private String country; // Optional
+
+    public Address(String addressNumber, String street, String ward, String district, String city, String country) {
+        this.addressNumber = addressNumber;
+        this.street = street;
+        this.ward = ward;
+        this.district = district;
+        this.city = city;
+        this.country = country;
+    }
+
+    public Address(){}
+
+    public String getAddressNumber() {
+        return addressNumber;
+    }
+
+    public void setAddressNumber(String addressNumber) {
+        this.addressNumber = addressNumber;
+    }
+
+    public String getStreet() {
+        return street;
+    }
+
+    public void setStreet(String street) {
+        this.street = street;
+    }
+
+    public String getWard() {
+        return ward;
+    }
+
+    public void setWard(String ward) {
+        this.ward = ward;
+    }
+
+    public String getDistrict() {
+        return district;
+    }
+
+    public void setDistrict(String district) {
+        this.district = district;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String convertStringAddress(){
+        return addressNumber + " " + street + " " + ward + " " + district + " " + city + " " + country;
+    }
+}
+

@@ -16,6 +16,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class RegisterActivity extends AppCompatActivity {
     ProgressBar progressBar;
@@ -63,14 +65,46 @@ public class RegisterActivity extends AppCompatActivity {
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //credential registration
                 String email, password, confirm;
+
+                //User information registration
+                String name, phone, nationality;
+                int age;
+
+                //User address registration
+                String addressNumber, street, ward, district, city, country;
+
                 email = String.valueOf(inputEmail.getText());
                 password = String.valueOf(inputPassword.getText());
                 confirm = String.valueOf(inputConfirmPassword.getText());
 
+                name = String.valueOf(inputName.getText());
+                phone = String.valueOf(inputPhoneNumber.getText());
+                try {
+                    age = Integer.parseInt(String.valueOf(inputAge.getText()));
+                } catch (NumberFormatException e) {
+                    age = 0;
+                }
+
+                nationality = String.valueOf(inputNationality.getText());
+
+                addressNumber = String.valueOf(inputAddressNumber.getText());
+                street = String.valueOf(inputStreet.getText());
+                ward = String.valueOf(inputWard.getText());
+                district = String.valueOf(inputDistrict.getText());
+                city = String.valueOf(inputCity.getText());
+                country = String.valueOf(inputCountry.getText());
+
+                Address userAddress = new Address(addressNumber, street, ward, district, city, country);
+                UserModel userModel = new UserModel(name, email, phone, age, nationality, userAddress);
+
+
+
+
                 if (!(email.isEmpty()) && !(password.isEmpty()) && !(confirm.isEmpty()) && password.equals(confirm)) {
                     progressBar.setVisibility(View.VISIBLE);
-                    signUpFunction(email, password);
+                    signUpFunction(email, password, userModel);
                 }
                 else{
                     Toast.makeText(RegisterActivity.this, "Fail to register!", Toast.LENGTH_SHORT).show();
@@ -80,15 +114,18 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
 
-    private void signUpFunction(String userEmail, String userPassword){
+    private void signUpFunction(String userEmail, String userPassword, UserModel userModel){
         FirebaseAuth userAccount = FirebaseAuth.getInstance();
+        FirebaseFirestore userDataRegister = FirebaseFirestore.getInstance();
         userAccount.createUserWithEmailAndPassword(userEmail, userPassword).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 progressBar.setVisibility(View.GONE);
                 if (task.isSuccessful()){
+                    userDataRegister.collection("users").document(userAccount.getCurrentUser().getUid()).set(userModel);
                     Toast.makeText(RegisterActivity.this, "Sign up account successfully", Toast.LENGTH_SHORT).show();
                     Intent backToLogin = new Intent(RegisterActivity.this, LoginPageActivity.class);
+                    userAccount.signOut();
                     startActivity(backToLogin);
                     finish();
                 }
