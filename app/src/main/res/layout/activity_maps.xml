@@ -19,19 +19,19 @@
         android:layout_alignParentTop="true"
         tools:context=".MainActivity" />
 
-<!--    <androidx.appcompat.widget.SearchView-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="50dp"-->
-<!--        android:id="@+id/locationSearch"-->
-<!--        map:queryHint="Search"-->
-<!--        android:layout_marginStart="10dp"-->
-<!--        android:layout_marginEnd="10dp"-->
-<!--        android:layout_marginTop="10dp"-->
-<!--        map:iconifiedByDefault="false"-->
-<!--        android:elevation="5dp"-->
+    <androidx.appcompat.widget.SearchView
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:id="@+id/locationSearch"
+        map:queryHint="Search"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="10dp"
+        map:iconifiedByDefault="false"
+        android:elevation="5dp"
 
-<!--        android:background="@drawable/search_bar_map"-->
-<!--        />-->
+        android:background="@drawable/search_bar_map"
+        />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:layout_width="match_parent"

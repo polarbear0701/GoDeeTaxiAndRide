@@ -7,6 +7,8 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Toast;
 
 import androidx.appcompat.widget.SearchView;
 import androidx.core.app.ActivityCompat;
@@ -30,7 +32,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static final int LOCATION_PERMISSION = 99;
 
     private GoogleMap mMap;
-//    private SearchView searchView = findViewById(R.id.locationSearch);
+    private androidx.appcompat.widget.SearchView searchView;
     private FusedLocationProviderClient client;
 
 
@@ -52,33 +54,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.main_map_home);
         mapFragment.getMapAsync(this);
+        searchView = findViewById(R.id.locationSearch);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Toast.makeText(MapsActivity.this, query, Toast.LENGTH_SHORT).show();
+                return false;
+            }
 
-//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-//            @Override
-//            public boolean onQueryTextSubmit(String query) {
-//                String location = searchView.getQuery().toString();
-//                List<Address> addressList = null;
-//                if (location != null){
-//                    Geocoder geocoder = new Geocoder(MapsActivity.this);
-//                    try {
-//                        addressList = geocoder.getFromLocationName(location, 1);
-//                    }catch (Exception e){
-//                        e.printStackTrace();
-//                    }
-//                    Address address = addressList.get(0);
-//                    LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
-//                    mMap.addMarker(new MarkerOptions().position(latLng).title(location));
-//                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
-//                }
-//                return false;
-//            }
-//
-//            @Override
-//            public boolean onQueryTextChange(String newText) {
-//                return false;
-//            }
-//        });
-
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
     }
 
     /**
