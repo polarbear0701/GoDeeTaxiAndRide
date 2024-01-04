@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/register_go_dee_image"
+    android:background="@drawable/driver_register"
     android:fillViewport="true">
 
     <LinearLayout

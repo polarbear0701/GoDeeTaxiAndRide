@@ -46,6 +46,7 @@ public class DriverLoginActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(DriverLoginActivity.this, LoginPageActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
 

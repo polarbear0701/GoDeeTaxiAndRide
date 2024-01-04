@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
-    android:background="@drawable/login_go_dee_image"
+    android:background="@drawable/login_driver"
     tools:context=".DriverLoginActivity">
 
     <TextView
