@@ -3,11 +3,8 @@ package com.example.godee;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.widget.SearchView;
@@ -16,6 +13,7 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.example.godee.databinding.ActivityMapsBinding;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -26,13 +24,10 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import java.util.List;
-
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
     private static final int LOCATION_PERMISSION = 99;
 
     private GoogleMap mMap;
-    private androidx.appcompat.widget.SearchView searchView;
     private FusedLocationProviderClient client;
 
 
@@ -54,7 +49,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.main_map_home);
         mapFragment.getMapAsync(this);
-        searchView = findViewById(R.id.locationSearch);
+        SearchView searchView = findViewById(R.id.locationSearch);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -107,7 +102,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @SuppressLint("MissingPermission")
     public void getUserCurrentPosition(){
-        client.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
+//        client.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
+//            @Override
+//            public void onSuccess(Location location) {
+//                LatLng userCurrentLocation = new LatLng(location.getLatitude(), location.getLongitude());
+//                mMap.addMarker(new MarkerOptions().position(userCurrentLocation).title("Your location"));
+//                mMap.moveCamera(CameraUpdateFactory.newLatLng(userCurrentLocation));
+//                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userCurrentLocation, 15));
+//            }
+//        });
+        client.getCurrentLocation(LocationRequest.PRIORITY_HIGH_ACCURACY, null).addOnSuccessListener(new OnSuccessListener<Location>() {
             @Override
             public void onSuccess(Location location) {
                 LatLng userCurrentLocation = new LatLng(location.getLatitude(), location.getLongitude());
