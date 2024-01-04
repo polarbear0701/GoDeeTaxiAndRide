@@ -6,20 +6,20 @@ public class UserModel {
     private String phoneNumber;
     private int age;
     private String nationality;
-    private Address address;
+    private userAddress useraddress;
     private Double latitude, longitude;
 
     public UserModel() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
-    public UserModel(String name, String email, String phoneNumber, int age, String nationality, Address address) {
+    public UserModel(String name, String email, String phoneNumber, int age, String nationality, userAddress useraddress) {
         this.name = name;
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.age = age;
         this.nationality = nationality;
-        this.address = address;
+        this.useraddress = useraddress;
     }
 
     public String getName() {
@@ -62,12 +62,12 @@ public class UserModel {
         this.nationality = nationality;
     }
 
-    public Address getAddress() {
-        return address;
+    public userAddress getAddress() {
+        return useraddress;
     }
 
-    public void setAddress(Address address) {
-        this.address = address;
+    public void setAddress(userAddress useraddress) {
+        this.useraddress = useraddress;
     }
 
     public Double getLatitude() {
@@ -89,7 +89,7 @@ public class UserModel {
 
 //package com.example.godee;
 
-class Address {
+class userAddress {
     private String addressNumber;
     private String street;
     private String ward; // Optional
@@ -97,7 +97,7 @@ class Address {
     private String city;
     private String country; // Optional
 
-    public Address(String addressNumber, String street, String ward, String district, String city, String country) {
+    public userAddress(String addressNumber, String street, String ward, String district, String city, String country) {
         this.addressNumber = addressNumber;
         this.street = street;
         this.ward = ward;
@@ -106,7 +106,7 @@ class Address {
         this.country = country;
     }
 
-    public Address(){}
+    public userAddress(){}
 
     public String getAddressNumber() {
         return addressNumber;

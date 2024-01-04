@@ -16,7 +16,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class RegisterActivity extends AppCompatActivity {
@@ -96,7 +95,7 @@ public class RegisterActivity extends AppCompatActivity {
                 city = String.valueOf(inputCity.getText());
                 country = String.valueOf(inputCountry.getText());
 
-                Address userAddress = new Address(addressNumber, street, ward, district, city, country);
+                userAddress userAddress = new userAddress(addressNumber, street, ward, district, city, country);
                 UserModel userModel = new UserModel(name, email, phone, age, nationality, userAddress);
 
 
