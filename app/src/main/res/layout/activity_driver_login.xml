@@ -86,13 +86,28 @@
         android:backgroundTint="#70006ca5"
         />
 
+
+    <TextView
+        android:id="@+id/tvBackToUserLogin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Back to User Login"
+        android:textSize="20sp"
+        android:layout_marginTop="20dp"
+        android:gravity="center_horizontal"
+        android:shadowColor="#66000000"
+        android:shadowDx="1"
+        android:shadowDy="1"
+        android:shadowRadius="40"
+        android:textColor="#ececec"
+        android:textStyle="bold"/>
     <TextView
         android:textStyle="bold"
         android:textSize="20sp"
         android:gravity="center"
         android:layout_marginTop="20dp"
         android:id="@+id/registerNow"
-        android:text="Not a driver? Register here"
+        android:text="Not a driver yet? Register here"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:shadowColor="#66000000"

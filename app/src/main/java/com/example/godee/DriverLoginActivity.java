@@ -19,7 +19,7 @@ public class DriverLoginActivity extends AppCompatActivity {
 
     FirebaseAuth auth;
 
-    FirebaseUser user;
+    FirebaseUser driver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,10 +27,10 @@ public class DriverLoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_driver_login);
 
         auth = FirebaseAuth.getInstance();
-        user = auth.getCurrentUser();
+        driver = auth.getCurrentUser();
 
-        if (user != null) {
-            user.getTenantId();
+        if (driver != null) {
+            driver.getTenantId();
             Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
             startActivity(intent);
             finish();
@@ -39,12 +39,20 @@ public class DriverLoginActivity extends AppCompatActivity {
         getSupportActionBar().hide();
         TextView textView;
         textView = findViewById(R.id.registerNow);
+        TextView tvBackToUserLogin = findViewById(R.id.tvBackToUserLogin);
 
-        // Set an OnClickListener
+        tvBackToUserLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(DriverLoginActivity.this, LoginPageActivity.class);
+                startActivity(intent);
+            }
+        });
+
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent returnUser = new Intent(getApplicationContext(), RegisterActivity.class);
+                Intent returnUser = new Intent(getApplicationContext(), DriverRegisterActivity.class);
                 startActivity(returnUser);
                 finish();
             }

@@ -50,6 +50,17 @@ public class LoginPageActivity extends AppCompatActivity {
         emailSignIn = findViewById(R.id.emailSignIn);
         passwordSignIn = findViewById(R.id.passwordSignIn);
 
+        TextView tvDriverLogin = findViewById(R.id.tvDriverLogin);
+
+        tvDriverLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginPageActivity.this, DriverLoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
