@@ -36,15 +36,15 @@ public class ProfileActivity extends AppCompatActivity {
         emailDisplay = findViewById(R.id.profileEmail);
         nameDisplay = findViewById(R.id.profileName);
 
-        db.collection("users").document(auth.getUid()).get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                emailDisplay.setText(task.getResult().get("email").toString());
-                nameDisplay.setText(task.getResult().get("name").toString());
-            }
-//            else{
-//                progressBar.setVisibility(View.GONE);
+//        db.collection("users").document(auth.getUid()).get().addOnCompleteListener(task -> {
+//            if (task.isSuccessful()) {
+//                emailDisplay.setText(task.getResult().get("email").toString());
+//                nameDisplay.setText(task.getResult().get("name").toString());
 //            }
-        });
+////            else{
+////                progressBar.setVisibility(View.GONE);
+////            }
+//        });
 
         getSupportActionBar().hide();
 

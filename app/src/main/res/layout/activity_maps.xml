@@ -9,6 +9,7 @@
     android:layout_height="match_parent"
     tools:context=".MapsActivity">
 
+
     <fragment
         android:id="@+id/main_map_home"
         android:name="com.google.android.gms.maps.SupportMapFragment"
@@ -17,6 +18,20 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         tools:context=".MainActivity" />
+
+<!--    <androidx.appcompat.widget.SearchView-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="50dp"-->
+<!--        android:id="@+id/locationSearch"-->
+<!--        map:queryHint="Search"-->
+<!--        android:layout_marginStart="10dp"-->
+<!--        android:layout_marginEnd="10dp"-->
+<!--        android:layout_marginTop="10dp"-->
+<!--        map:iconifiedByDefault="false"-->
+<!--        android:elevation="5dp"-->
+
+<!--        android:background="@drawable/search_bar_map"-->
+<!--        />-->
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:layout_width="match_parent"
