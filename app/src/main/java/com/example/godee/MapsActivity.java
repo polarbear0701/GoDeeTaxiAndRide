@@ -102,22 +102,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @SuppressLint("MissingPermission")
     public void getUserCurrentPosition(){
-//        client.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
-//            @Override
-//            public void onSuccess(Location location) {
-//                LatLng userCurrentLocation = new LatLng(location.getLatitude(), location.getLongitude());
-//                mMap.addMarker(new MarkerOptions().position(userCurrentLocation).title("Your location"));
-//                mMap.moveCamera(CameraUpdateFactory.newLatLng(userCurrentLocation));
-//                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userCurrentLocation, 15));
-//            }
-//        });
         client.getCurrentLocation(LocationRequest.PRIORITY_HIGH_ACCURACY, null).addOnSuccessListener(new OnSuccessListener<Location>() {
             @Override
             public void onSuccess(Location location) {
                 LatLng userCurrentLocation = new LatLng(location.getLatitude(), location.getLongitude());
                 mMap.addMarker(new MarkerOptions().position(userCurrentLocation).title("Your location"));
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(userCurrentLocation));
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userCurrentLocation, 15));
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userCurrentLocation, 13));
             }
         });
     }
