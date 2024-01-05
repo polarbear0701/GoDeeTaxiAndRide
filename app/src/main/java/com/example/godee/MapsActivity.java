@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
@@ -24,7 +25,6 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -65,6 +65,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.main_map_home);
+        assert mapFragment != null;
         mapFragment.getMapAsync(this);
         SearchView searchView = findViewById(R.id.locationSearch);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -72,23 +73,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public boolean onQueryTextSubmit(String query) {
                 String location = searchView.getQuery().toString();
                 List<Address> addressList = null;
-                if(location != null || !location.equals("")){
-                    Geocoder geocoder = new Geocoder(MapsActivity.this);
-                    try {
-                        addressList = geocoder.getFromLocationName(location, 1);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    Address address = addressList.get(0);
-                    LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
-                    drawRoute(userCurrentLocationInstance, latLng);
-                    mMap.addMarker(new MarkerOptions().position(latLng).title(location));
-                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
-                    Toast.makeText(MapsActivity.this, userCurrentLocationInstance.latitude + " " + userCurrentLocationInstance.longitude, Toast.LENGTH_SHORT).show();
+                Geocoder geocoder = new Geocoder(MapsActivity.this);
+                try {
+                    addressList = geocoder.getFromLocationName(location, 1);
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-                else{
-                    Toast.makeText(MapsActivity.this, "Please enter a location", Toast.LENGTH_SHORT).show();
-                }
+                Address address = addressList.get(0);
+                LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
+                drawRoute(userCurrentLocationInstance, latLng);
+                mMap.addMarker(new MarkerOptions().position(latLng).title(location));
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
+                Toast.makeText(MapsActivity.this, userCurrentLocationInstance.latitude + " " + userCurrentLocationInstance.longitude, Toast.LENGTH_SHORT).show();
                 Toast.makeText(MapsActivity.this, query, Toast.LENGTH_SHORT).show();
                 return false;
             }
@@ -111,7 +107,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * installed Google Play services and returned to the app.
      */
     @Override
-    public void onMapReady(GoogleMap googleMap) {
+    public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
         getUserCurrentPosition();
 
@@ -140,16 +136,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @SuppressLint("MissingPermission")
     public void getUserCurrentPosition(){
-        client.getCurrentLocation(LocationRequest.PRIORITY_HIGH_ACCURACY, null).addOnSuccessListener(new OnSuccessListener<Location>() {
-            @Override
-            public void onSuccess(Location location) {
-                LatLng userCurrentLocation = new LatLng(location.getLatitude(), location.getLongitude());
-                userCurrentLocationInstance = userCurrentLocation;
-                Log.d("current location", "onMapReady: " + userCurrentLocationInstance);
-                mMap.addMarker(new MarkerOptions().position(userCurrentLocation).title("Your location"));
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(userCurrentLocation));
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userCurrentLocation, 13));
-            }
+        client.getCurrentLocation(LocationRequest.PRIORITY_HIGH_ACCURACY, null).addOnSuccessListener(location -> {
+            LatLng userCurrentLocation = new LatLng(location.getLatitude(), location.getLongitude());
+            userCurrentLocationInstance = userCurrentLocation;
+            Log.d("current location", "onMapReady: " + userCurrentLocationInstance);
+            mMap.addMarker(new MarkerOptions().position(userCurrentLocation).title("Your location"));
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(userCurrentLocation));
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userCurrentLocation, 13));
         });
     }
 
