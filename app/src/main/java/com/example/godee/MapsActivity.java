@@ -44,7 +44,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private GoogleMap mMap;
     private LatLng userCurrentLocationInstance;
-    private Polyline routePolyline;
     private FusedLocationProviderClient client;
 
 
@@ -74,23 +73,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public boolean onQueryTextSubmit(String query) {
                 String location = searchView.getQuery().toString();
                 List<Address> addressList = null;
-                if(location != null || !location.equals("")){
-                    Geocoder geocoder = new Geocoder(MapsActivity.this);
-                    try {
-                        addressList = geocoder.getFromLocationName(location, 1);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    Address address = addressList.get(0);
-                    LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
-                    drawRoute(userCurrentLocationInstance, latLng);
-                    mMap.addMarker(new MarkerOptions().position(latLng).title(location));
-                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
-                    Toast.makeText(MapsActivity.this, userCurrentLocationInstance.latitude + " " + userCurrentLocationInstance.longitude, Toast.LENGTH_SHORT).show();
+                Geocoder geocoder = new Geocoder(MapsActivity.this);
+                try {
+                    addressList = geocoder.getFromLocationName(location, 1);
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-                else{
-                    Toast.makeText(MapsActivity.this, "Please enter a location", Toast.LENGTH_SHORT).show();
-                }
+                Address address = addressList.get(0);
+                LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
+                drawRoute(userCurrentLocationInstance, latLng);
+                mMap.addMarker(new MarkerOptions().position(latLng).title(location));
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
+                Toast.makeText(MapsActivity.this, userCurrentLocationInstance.latitude + " " + userCurrentLocationInstance.longitude, Toast.LENGTH_SHORT).show();
                 Toast.makeText(MapsActivity.this, query, Toast.LENGTH_SHORT).show();
                 return false;
             }
