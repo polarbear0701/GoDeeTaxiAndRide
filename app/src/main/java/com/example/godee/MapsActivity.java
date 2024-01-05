@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
+import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -15,7 +16,10 @@ import androidx.appcompat.widget.SearchView;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
+import com.directions.route.AbstractRouting;
 import com.example.godee.databinding.ActivityMapsBinding;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
@@ -25,24 +29,31 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.maps.DirectionsApi;
 import com.google.maps.DirectionsApiRequest;
 import com.google.maps.GeoApiContext;
 import com.google.maps.android.PolyUtil;
 import com.google.maps.model.DirectionsLeg;
 import com.google.maps.model.DirectionsResult;
 import com.google.maps.model.DirectionsStep;
+import com.google.maps.model.TravelMode;
+import com.directions.route.Routing;
+import com.directions.route.RoutingListener;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback{
-//    private static final int LOCATION_PERMISSION = 99;
+    private static final int LOCATION_PERMISSION = 99;
 
     private GoogleMap mMap;
     private LatLng userCurrentLocationInstance;
+    private Polyline routePolyline;
     private FusedLocationProviderClient client;
 
 
@@ -65,7 +76,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.main_map_home);
-        assert mapFragment != null;
         mapFragment.getMapAsync(this);
         SearchView searchView = findViewById(R.id.locationSearch);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -73,18 +83,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public boolean onQueryTextSubmit(String query) {
                 String location = searchView.getQuery().toString();
                 List<Address> addressList = null;
-                Geocoder geocoder = new Geocoder(MapsActivity.this);
-                try {
-                    addressList = geocoder.getFromLocationName(location, 1);
-                } catch (IOException e) {
-                    e.printStackTrace();
+                if(location != null || !location.equals("")){
+                    Geocoder geocoder = new Geocoder(MapsActivity.this);
+                    try {
+                        addressList = geocoder.getFromLocationName(location, 1);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    Address address = addressList.get(0);
+                    LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
+                    drawRoute(userCurrentLocationInstance, latLng);
+                    mMap.addMarker(new MarkerOptions().position(latLng).title(location));
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
+                    Toast.makeText(MapsActivity.this, userCurrentLocationInstance.latitude + " " + userCurrentLocationInstance.longitude, Toast.LENGTH_SHORT).show();
                 }
-                Address address = addressList.get(0);
-                LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
-                drawRoute(userCurrentLocationInstance, latLng);
-                mMap.addMarker(new MarkerOptions().position(latLng).title(location));
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
-                Toast.makeText(MapsActivity.this, userCurrentLocationInstance.latitude + " " + userCurrentLocationInstance.longitude, Toast.LENGTH_SHORT).show();
+                else{
+                    Toast.makeText(MapsActivity.this, "Please enter a location", Toast.LENGTH_SHORT).show();
+                }
                 Toast.makeText(MapsActivity.this, query, Toast.LENGTH_SHORT).show();
                 return false;
             }
@@ -107,7 +122,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * installed Google Play services and returned to the app.
      */
     @Override
-    public void onMapReady(@NonNull GoogleMap googleMap) {
+    public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         getUserCurrentPosition();
 
@@ -136,13 +151,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @SuppressLint("MissingPermission")
     public void getUserCurrentPosition(){
-        client.getCurrentLocation(LocationRequest.PRIORITY_HIGH_ACCURACY, null).addOnSuccessListener(location -> {
-            LatLng userCurrentLocation = new LatLng(location.getLatitude(), location.getLongitude());
-            userCurrentLocationInstance = userCurrentLocation;
-            Log.d("current location", "onMapReady: " + userCurrentLocationInstance);
-            mMap.addMarker(new MarkerOptions().position(userCurrentLocation).title("Your location"));
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(userCurrentLocation));
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userCurrentLocation, 13));
+        client.getCurrentLocation(LocationRequest.PRIORITY_HIGH_ACCURACY, null).addOnSuccessListener(new OnSuccessListener<Location>() {
+            @Override
+            public void onSuccess(Location location) {
+                LatLng userCurrentLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                userCurrentLocationInstance = userCurrentLocation;
+                Log.d("current location", "onMapReady: " + userCurrentLocationInstance);
+                mMap.addMarker(new MarkerOptions().position(userCurrentLocation).title("Your location"));
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(userCurrentLocation));
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userCurrentLocation, 13));
+            }
         });
     }
 
@@ -174,7 +192,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void drawRoute(LatLng origin, LatLng destination) {
         // Use a directions API client to get route information
         // Replace YOUR_API_KEY with your actual API key
-        DirectionsApiRequest request = new DirectionsApiRequest(new GeoApiContext.Builder().apiKey("AIzaSyA-qGgUm9sSW2Kg8QX47yPofhaiVp14tAs").build());
+        DirectionsApiRequest request = new DirectionsApiRequest(new GeoApiContext.Builder().apiKey("AIzaSyAHUvfBiUgU0zaKO2TxG4oYKLl5geXMiwc").build());
         try {
             DirectionsResult result = request.origin(new com.google.maps.model.LatLng(origin.latitude, origin.longitude))
                     .destination(new com.google.maps.model.LatLng(destination.latitude, destination.longitude))
