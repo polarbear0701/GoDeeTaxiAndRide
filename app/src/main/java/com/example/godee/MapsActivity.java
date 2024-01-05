@@ -39,11 +39,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback{
-    private static final int LOCATION_PERMISSION = 99;
+//    private static final int LOCATION_PERMISSION = 99;
 
     private GoogleMap mMap;
     private LatLng userCurrentLocationInstance;
-    private Polyline routePolyline;
     private FusedLocationProviderClient client;
 
 
