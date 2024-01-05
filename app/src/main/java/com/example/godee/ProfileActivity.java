@@ -73,6 +73,11 @@ public class ProfileActivity extends AppCompatActivity {
             if (itemId == R.id.activity_profile){
                 return true;
             }
+            if (itemId == R.id.actiivty_history){
+                Intent intent = new Intent(getApplicationContext(), HistoryPageActivity.class);
+                startActivity(intent);
+                finish();
+            }
             // This part is expandable base on the number of tab need for the application
             /* Structure
                if (itemId == R.id.[name of the item]){

@@ -10,4 +10,8 @@
     <color name="lavender">#8692f7</color>
     <color name="purple">#8692f7</color>
     <color name="grey">#808080</color>
+    <color name="light_teal">#81CAD6</color>
+    <color name="vermillion">#EDCD44</color>
+    <color name="orange">#DC3E26</color>
+
 </resources>

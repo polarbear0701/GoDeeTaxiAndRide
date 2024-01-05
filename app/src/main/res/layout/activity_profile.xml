@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -9,7 +9,7 @@
     tools:context=".ProfileActivity">
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
     <ImageView
         android:layout_width="100dp"
@@ -242,7 +242,7 @@
     <LinearLayout
         android:id="@+id/profile_button_layout"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="4dp"
         android:gravity="center"
         android:orientation="horizontal">
@@ -264,7 +264,7 @@
         <Button
             android:id="@+id/logoutButton"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:gravity="center"
             android:text="Log Out"
@@ -284,24 +284,14 @@
 <!--            app:layout_constraintStart_toStartOf="@id/linearLayout"-->
 <!--            app:layout_constraintTop_toBottomOf="@id/linearLayout" />-->
     </LinearLayout>
-    <LinearLayout
-        android:id="@+id/profile_navigation_bar"
+    </LinearLayout>
+    <com.google.android.material.bottomnavigation.BottomNavigationView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent">
-
-        <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/page_navigation"
-            app:menu="@menu/navigation_menu"
-            android:layout_marginHorizontal="10dp"
-            android:layout_marginBottom="10dp"
-            android:background="@drawable/page_navigation_outline" />
-
-    </LinearLayout>
-    </LinearLayout>
-
-
-</ScrollView>
+        android:id="@+id/page_navigation"
+        app:menu="@menu/navigation_menu"
+        android:layout_marginHorizontal="10dp"
+        android:background="@drawable/page_navigation_outline"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10dp"/>
+</RelativeLayout>
