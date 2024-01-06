@@ -77,13 +77,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                Address address = addressList.get(0);
-                LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
-                drawRoute(userCurrentLocationInstance, latLng);
-                mMap.addMarker(new MarkerOptions().position(latLng).title(location));
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
-                Toast.makeText(MapsActivity.this, userCurrentLocationInstance.latitude + " " + userCurrentLocationInstance.longitude, Toast.LENGTH_SHORT).show();
-                Toast.makeText(MapsActivity.this, query, Toast.LENGTH_SHORT).show();
+                assert addressList != null;
+                if (addressList.size() == 0) {
+                    Toast.makeText(MapsActivity.this, "Location not found", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Address address = addressList.get(0);
+                    LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
+                    drawRoute(userCurrentLocationInstance, latLng);
+                    mMap.addMarker(new MarkerOptions().position(latLng).title(location));
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
+                    Toast.makeText(MapsActivity.this, userCurrentLocationInstance.latitude + " " + userCurrentLocationInstance.longitude, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MapsActivity.this, query, Toast.LENGTH_SHORT).show();
+                }
                 return false;
             }
 
