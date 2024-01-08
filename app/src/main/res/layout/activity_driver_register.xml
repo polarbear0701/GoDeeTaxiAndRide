@@ -157,7 +157,7 @@
 
         <!-- Register Button -->
         <Button
-            android:id="@+id/btn_register"
+            android:id="@+id/btn_register_driver"
             android:text="Register"
             android:textSize="16dp"
             android:layout_width="wrap_content"

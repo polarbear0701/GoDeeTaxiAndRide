@@ -96,7 +96,7 @@ public class RegisterActivity extends AppCompatActivity {
                 country = String.valueOf(inputCountry.getText());
 
                 userAddress userAddress = new userAddress(addressNumber, street, ward, district, city, country);
-                UserModel userModel = new UserModel(name, email, phone, age, nationality, userAddress);
+                UserModel userModel = new UserModel(name, email, phone, age, nationality, userAddress, 100);
 
 
 

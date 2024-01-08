@@ -7,6 +7,7 @@ public class DriverModel {
     private String phoneNumber;
     private int age;
     private String nationality;
+    private int accountType;
     private Double latitude, longitude;
 
     public DriverModel() {
@@ -75,5 +76,13 @@ public class DriverModel {
 
     public void setLongitude(Double longitude) {
         this.longitude = longitude;
+    }
+
+    public int getAccountType() {
+        return accountType;
+    }
+
+    public void setAccountType(int accountType) {
+        this.accountType = accountType;
     }
 }

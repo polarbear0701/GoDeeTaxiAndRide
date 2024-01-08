@@ -12,14 +12,20 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.Objects;
 
 public class LoginPageActivity extends AppCompatActivity {
 
-    FirebaseAuth auth;
+    FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
     FirebaseUser user;
 
@@ -28,8 +34,7 @@ public class LoginPageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_page);
 
-        auth = FirebaseAuth.getInstance();
-        user = auth.getCurrentUser();
+        user = mAuth.getCurrentUser();
 
         if (user != null) {
             user.getTenantId();
@@ -40,7 +45,6 @@ public class LoginPageActivity extends AppCompatActivity {
 
         TextView textView;
         Button loginButton;
-        FirebaseAuth mAuth = FirebaseAuth.getInstance();
         EditText emailSignIn, passwordSignIn;
 
         getSupportActionBar().hide();
@@ -78,17 +82,27 @@ public class LoginPageActivity extends AppCompatActivity {
                 email = String.valueOf(emailSignIn.getText());
                 password = String.valueOf(passwordSignIn.getText());
 
-                mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                DocumentReference documentReference = db.collection("users").document("EcWs461VgHPFZ6IKieTWp7rOkh23");
+                documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()){
-                            Toast.makeText(LoginPageActivity.this, "Login successfully!", Toast.LENGTH_SHORT).show();
-                            Intent toHomePage = new Intent(LoginPageActivity.this, MapsActivity.class);
-                            startActivity(toHomePage);
-                            finish();
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        UserModel modelTemp = documentSnapshot.toObject(UserModel.class);
+                        if (modelTemp.getAccountType() != 100){
+                            Toast.makeText(LoginPageActivity.this, "You are a driver, please login in driver page!", Toast.LENGTH_SHORT).show();
                         }
                         else{
-                            Toast.makeText(LoginPageActivity.this, "Login failed!", Toast.LENGTH_SHORT).show();
+                            mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
+                                if (task.isSuccessful()){
+                                    Toast.makeText(LoginPageActivity.this, "Login successfully!", Toast.LENGTH_SHORT).show();
+                                    Intent toHomePage = new Intent(LoginPageActivity.this, MapsActivity.class);
+                                    startActivity(toHomePage);
+                                    finish();
+                                }
+                                else{
+                                    Toast.makeText(LoginPageActivity.this, "Login failed!", Toast.LENGTH_SHORT).show();
+                                }
+                            });
                         }
                     }
                 });

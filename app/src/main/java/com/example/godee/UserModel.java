@@ -7,6 +7,7 @@ public class UserModel {
     private int age;
     private String nationality;
     private userAddress useraddress;
+    private int accountType;
     private Double latitude, longitude;
 
     public UserModel() {
@@ -20,6 +21,15 @@ public class UserModel {
         this.age = age;
         this.nationality = nationality;
         this.useraddress = useraddress;
+    }
+    public UserModel(String name, String email, String phoneNumber, int age, String nationality, userAddress useraddress, int accountType) {
+        this.name = name;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.age = age;
+        this.nationality = nationality;
+        this.useraddress = useraddress;
+        this.accountType = accountType;
     }
 
     public String getName() {
@@ -84,6 +94,14 @@ public class UserModel {
 
     public void setLongitude(Double longitude) {
         this.longitude = longitude;
+    }
+
+    public int getAccountType() {
+        return accountType;
+    }
+
+    public void setAccountType(int accountType) {
+        this.accountType = accountType;
     }
 }
 
