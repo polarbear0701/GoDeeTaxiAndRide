@@ -20,15 +20,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.GoDee"
         tools:targetApi="31">
-        <activity
-            android:name=".HistoryPageActivity"
-            android:exported="false" />
-        <activity
-            android:name=".DriverRegisterActivity"
-            android:exported="false" />
-        <activity
-            android:name=".DriverLoginActivity"
-            android:exported="false" />
+
         <!--
              TODO: Before you run your application, you need a Google Maps API key.
 
@@ -42,8 +34,24 @@
         -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_map_api_key" />
-        <meta-data android:name="com.google.android.gms.version"
+            android:value="AIzaSyDDz3gM0Gz0Ng9gjr1KBhigIystKHJI2tU" />
+
+        <activity
+            android:name=".DriverMapsActivity"
+            android:exported="true"
+            android:label="@string/title_activity_driver_maps" />
+        <activity
+            android:name=".HistoryPageActivity"
+            android:exported="false" />
+        <activity
+            android:name=".DriverRegisterActivity"
+            android:exported="false" />
+        <activity
+            android:name=".DriverLoginActivity"
+            android:exported="false" />
+
+        <meta-data
+            android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
         <activity

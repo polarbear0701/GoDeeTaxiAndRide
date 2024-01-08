@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:map="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".DriverMapsActivity">
+
+    <fragment
+
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:id="@+id/driver_map"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".DriverMapsActivity"/>
+
+    <androidx.appcompat.widget.SearchView
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:id="@+id/driverLocationSearch"
+        map:queryHint="Search"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="10dp"
+        map:iconifiedByDefault="false"
+        android:elevation="5dp"
+        android:background="@drawable/search_bar_map"
+        />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/driver_logOut"
+        android:text="Log Out"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"/>
+
+</RelativeLayout>
