@@ -14,12 +14,13 @@ public class DriverModel {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
-    public DriverModel(String name, String email, String phoneNumber, int age, String nationality) {
+    public DriverModel(String name, String email, String phoneNumber, int age, String nationality, int accountType) {
         this.name = name;
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.age = age;
         this.nationality = nationality;
+        this.accountType = accountType;
     }
 
     public String getName() {

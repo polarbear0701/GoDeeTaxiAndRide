@@ -1,6 +1,5 @@
 package com.example.godee;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,8 +9,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.godee.ModelClass.DriverModel;
@@ -43,7 +40,7 @@ public class DriverLoginActivity extends AppCompatActivity {
             finish();
         }
 
-        getSupportActionBar().hide();
+        Objects.requireNonNull(getSupportActionBar()).hide();
         TextView textView;
         textView = findViewById(R.id.registerNow);
         TextView tvBackToUserLogin = findViewById(R.id.tvBackToUserLogin);
@@ -63,10 +60,21 @@ public class DriverLoginActivity extends AppCompatActivity {
             }
             auth.signInWithEmailAndPassword(emailText, passwordText).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
-                    Toast.makeText(DriverLoginActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(DriverLoginActivity.this, DriverMapsActivity.class);
-                    startActivity(intent);
-                    finish();
+                    DocumentReference docRef = FirebaseFirestore.getInstance().collection("drivers").document(Objects.requireNonNull(auth.getCurrentUser()).getUid());
+                    docRef.get().addOnSuccessListener(documentSnapshot -> {
+                        DriverModel driverModelTemp = documentSnapshot.toObject(DriverModel.class);
+                        assert driverModelTemp != null;
+                        if (driverModelTemp.getAccountType() != 200){
+                            Toast.makeText(DriverLoginActivity.this, "You are a user, please login in driver page!", Toast.LENGTH_SHORT).show();
+                            auth.signOut();
+                        }
+                        else{
+                            Toast.makeText(DriverLoginActivity.this, "Welcome Driver!!", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(DriverLoginActivity.this, DriverMapsActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }
+                    });
                 } else {
                     Toast.makeText(DriverLoginActivity.this, "Login Failed!", Toast.LENGTH_SHORT).show();
                 }
@@ -74,22 +82,16 @@ public class DriverLoginActivity extends AppCompatActivity {
 
         });
 
-        tvBackToUserLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(DriverLoginActivity.this, LoginPageActivity.class);
-                startActivity(intent);
-                finish();
-            }
+        tvBackToUserLogin.setOnClickListener(view -> {
+            Intent intent = new Intent(DriverLoginActivity.this, LoginPageActivity.class);
+            startActivity(intent);
+            finish();
         });
 
-        textView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent returnUser = new Intent(getApplicationContext(), DriverRegisterActivity.class);
-                startActivity(returnUser);
-                finish();
-            }
+        textView.setOnClickListener(v -> {
+            Intent returnUser = new Intent(getApplicationContext(), DriverRegisterActivity.class);
+            startActivity(returnUser);
+            finish();
         });
 
 
