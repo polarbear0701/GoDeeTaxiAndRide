@@ -141,7 +141,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         client.getCurrentLocation(LocationRequest.PRIORITY_HIGH_ACCURACY, null).addOnSuccessListener(location -> {
             LatLng userCurrentLocation = new LatLng(location.getLatitude(), location.getLongitude());
             userCurrentLocationInstance = userCurrentLocation;
-            Log.d("current location", "onMapReady: " + userCurrentLocationInstance);
             mMap.addMarker(new MarkerOptions().position(userCurrentLocation).title("Your location"));
             mMap.moveCamera(CameraUpdateFactory.newLatLng(userCurrentLocation));
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userCurrentLocation, 13));
