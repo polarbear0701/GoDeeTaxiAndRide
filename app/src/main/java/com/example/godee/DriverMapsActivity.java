@@ -119,7 +119,9 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
                 }
 
                 if (value != null && value.exists()){
-                    Toast.makeText(DriverMapsActivity.this, "Driver is online" + driverCurrentLocationInstance, Toast.LENGTH_SHORT).show();
+                    docRef.update("latitude", driverCurrentLocationInstance.latitude);
+                    docRef.update("longitude", driverCurrentLocationInstance.longitude);
+//                    Toast.makeText(DriverMapsActivity.this, "Driver is online" + driverCurrentLocationInstance, Toast.LENGTH_SHORT).show();
                 }
                 else{
                     Toast.makeText(DriverMapsActivity.this, "Driver is offline", Toast.LENGTH_SHORT).show();
