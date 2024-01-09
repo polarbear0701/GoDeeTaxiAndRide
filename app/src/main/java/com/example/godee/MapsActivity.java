@@ -44,8 +44,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private FusedLocationProviderClient client;
 
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         requestPermission();
