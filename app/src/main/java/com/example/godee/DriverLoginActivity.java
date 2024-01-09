@@ -1,9 +1,11 @@
 package com.example.godee;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -12,8 +14,13 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.godee.ModelClass.DriverModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.Objects;
 
 public class DriverLoginActivity extends AppCompatActivity {
 
@@ -40,6 +47,32 @@ public class DriverLoginActivity extends AppCompatActivity {
         TextView textView;
         textView = findViewById(R.id.registerNow);
         TextView tvBackToUserLogin = findViewById(R.id.tvBackToUserLogin);
+        Button driverLoginButton = findViewById(R.id.btn_login_driver);
+
+        EditText emailSignIn = findViewById(R.id.emailSignIn);
+        EditText passwordSignIn = findViewById(R.id.passwordSignIn);
+
+        driverLoginButton.setOnClickListener(v -> {
+            String emailText = String.valueOf(emailSignIn.getText());
+            String passwordText = String.valueOf(passwordSignIn.getText());
+            hideKeyboard(v);
+
+            if ((emailText.isEmpty()) || (passwordText.isEmpty())) {
+                Toast.makeText(DriverLoginActivity.this, "Please fill in all the fields!", Toast.LENGTH_SHORT).show();
+//                return;
+            }
+            auth.signInWithEmailAndPassword(emailText, passwordText).addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    Toast.makeText(DriverLoginActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(DriverLoginActivity.this, DriverMapsActivity.class);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    Toast.makeText(DriverLoginActivity.this, "Login Failed!", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+        });
 
         tvBackToUserLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,5 +91,13 @@ public class DriverLoginActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+
     }
+
+    private void hideKeyboard(View view) {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
 }
