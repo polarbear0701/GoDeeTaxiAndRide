@@ -8,4 +8,5 @@
     <string name="google_map_api_key">AIzaSyA-qGgUm9sSW2Kg8QX47yPofhaiVp14tAs</string>
     <string name="title_activity_maps">MapsActivity</string>
     <string name="driver_login">Driver Login</string>
+    <string name="title_activity_driver_maps">DriverMapsActivity</string>
 </resources>

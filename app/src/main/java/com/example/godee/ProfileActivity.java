@@ -16,7 +16,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 public class ProfileActivity extends AppCompatActivity {
 
     private Button logoutButton;
-    private TextView emailDisplay, nameDisplay;
+    private TextView userEdit, settingEdit;
 
     FirebaseAuth auth;
 
@@ -33,8 +33,8 @@ public class ProfileActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
 
-        emailDisplay = findViewById(R.id.profileEmail);
-        nameDisplay = findViewById(R.id.profileName);
+        userEdit = findViewById(R.id.profile_user_edit);
+        settingEdit = findViewById(R.id.profile_setting_edit);
 
 //        db.collection("users").document(auth.getUid()).get().addOnCompleteListener(task -> {
 //            if (task.isSuccessful()) {
@@ -53,6 +53,24 @@ public class ProfileActivity extends AppCompatActivity {
         BottomNavigationView pageMenu = findViewById(R.id.page_navigation);
         pageMenu.setSelectedItemId(R.id.activity_profile);
         pageNavigation(pageMenu);
+
+        userEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), UserInfoActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+        settingEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), UserSettingActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
 
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
