@@ -4,11 +4,13 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
@@ -31,16 +33,19 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 
+import java.util.Objects;
+
 public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    private ActivityDriverMapsBinding binding;
-    private Button driverLogOutBtn;
     LatLng driverCurrentLocationInstance;
     FirebaseAuth auth;
     FirebaseUser user;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     FusedLocationProviderClient client;
+    Handler handler;
+    long refresh = 5000;
+    Runnable runnable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,10 +56,10 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
 
-        binding = ActivityDriverMapsBinding.inflate(getLayoutInflater());
+        com.example.godee.databinding.ActivityDriverMapsBinding binding = ActivityDriverMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        driverLogOutBtn = findViewById(R.id.btn_logout_driver);
+        Button driverLogOutBtn = findViewById(R.id.btn_logout_driver);
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -62,15 +67,19 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
         assert mapFragment != null;
         mapFragment.getMapAsync(this);
 
-        driverLogOutBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                auth.signOut();
-                Intent backToLogin = new Intent(getApplicationContext(), DriverLoginActivity.class);
-                startActivity(backToLogin);
-                finish();
-            }
+        driverLogOutBtn.setOnClickListener(v -> {
+            auth.signOut();
+            Intent backToLogin = new Intent(getApplicationContext(), DriverLoginActivity.class);
+            startActivity(backToLogin);
+            finish();
         });
+        handler = new Handler();
+        handler.postDelayed(runnable = () -> {
+            mMap.clear();
+            getDriverCurrentLocation();
+            handler.postDelayed(runnable, refresh);
+        }, refresh);
+//        getDriverCurrentLocation();
     }
 
     /**
@@ -83,14 +92,12 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
      * installed Google Play services and returned to the app.
      */
     @Override
-    public void onMapReady(GoogleMap googleMap) {
+    public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
-        mMap.getUiSettings().setAllGesturesEnabled(true);
+//        mMap.getUiSettings().setAllGesturesEnabled(true);
+        //set zoom control
+        mMap.getUiSettings().setZoomControlsEnabled(true);
         mMap.setPadding(0, 0,0, 400);
-        while (true){
-            getDriverCurrentLocation();
-        }
-
     }
     private void requestPermission(){
         ActivityCompat.requestPermissions(DriverMapsActivity.this,new String[]{
@@ -105,20 +112,17 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
         client.getCurrentLocation(LocationRequest.PRIORITY_HIGH_ACCURACY, null).addOnSuccessListener(location -> {
             LatLng driverCurrentLocation = new LatLng(location.getLatitude(), location.getLongitude());
             driverCurrentLocationInstance = driverCurrentLocation;
-            DocumentReference docRef = db.collection("drivers").document(auth.getCurrentUser().getUid());
-            docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
-                @Override
-                public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                    if (error != null){
-                        Log.e("DriverMapsActivity", "Listen failed", error);
-                    }
+            DocumentReference docRef = db.collection("drivers").document(Objects.requireNonNull(auth.getCurrentUser()).getUid());
+            docRef.addSnapshotListener((value, error) -> {
+                if (error != null){
+                    Log.e("DriverMapsActivity", "Listen failed", error);
+                }
 
-                    if (value != null && value.exists()){
-                        Toast.makeText(DriverMapsActivity.this, "Driver is online" + driverCurrentLocationInstance, Toast.LENGTH_SHORT).show();
-                    }
-                    else{
-                        Toast.makeText(DriverMapsActivity.this, "Driver is offline", Toast.LENGTH_SHORT).show();
-                    }
+                if (value != null && value.exists()){
+                    Toast.makeText(DriverMapsActivity.this, "Driver is online" + driverCurrentLocationInstance, Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    Toast.makeText(DriverMapsActivity.this, "Driver is offline", Toast.LENGTH_SHORT).show();
                 }
             });
             mMap.addMarker(new MarkerOptions().position(driverCurrentLocation).title("Your Location"));
