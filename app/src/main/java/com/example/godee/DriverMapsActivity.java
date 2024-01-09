@@ -1,30 +1,34 @@
 package com.example.godee;
 
-import androidx.fragment.app.FragmentActivity;
-
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 
+import androidx.fragment.app.FragmentActivity;
+
+import com.example.godee.databinding.ActivityDriverMapsBinding;
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.example.godee.databinding.ActivityDriverMapsBinding;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private ActivityDriverMapsBinding binding;
     private Button driverLogOutBtn;
-
+    FirebaseAuth auth;
+    FirebaseUser user;
     FusedLocationProviderClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        auth = FirebaseAuth.getInstance();
+        user = auth.getCurrentUser();
 
         binding = ActivityDriverMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -35,6 +39,16 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        driverLogOutBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                auth.signOut();
+                Intent backToLogin = new Intent(getApplicationContext(), DriverLoginActivity.class);
+                startActivity(backToLogin);
+                finish();
+            }
+        });
     }
 
     /**
@@ -50,6 +64,5 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.getUiSettings().setAllGesturesEnabled(true);
-
     }
 }

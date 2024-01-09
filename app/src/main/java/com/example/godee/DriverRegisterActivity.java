@@ -1,13 +1,13 @@
 package com.example.godee;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.godee.ModelClass.DriverModel;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -73,7 +73,7 @@ public class DriverRegisterActivity extends AppCompatActivity {
                 if (task.isSuccessful()){
                     driverDataRegister.collection("drivers").document(driverAccount.getCurrentUser().getUid()).set(driverModel);
                     Toast.makeText(DriverRegisterActivity.this, "Sign up as driver successfully", Toast.LENGTH_SHORT).show();
-                    Intent backToLogin = new Intent(DriverRegisterActivity.this, LoginPageActivity.class);
+                    Intent backToLogin = new Intent(DriverRegisterActivity.this, DriverLoginActivity.class);
                     driverAccount.signOut();
                     startActivity(backToLogin);
                     finish();
