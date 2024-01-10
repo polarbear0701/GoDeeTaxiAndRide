@@ -46,6 +46,14 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
     Handler handler;
     long refresh = 5000;
     Runnable runnable;
+    private Button joinSessionBtn;
+    private Boolean checkSessionJoin = false;
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        auth.signOut();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,8 +86,14 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
             mMap.clear();
             getDriverCurrentLocation();
             handler.postDelayed(runnable, refresh);
+
         }, refresh);
-//        getDriverCurrentLocation();
+
+        joinSessionBtn = findViewById(R.id.btn);
+        joinSessionBtn.setOnClickListener(v -> {
+            checkSessionJoin = true;
+        });
+
     }
 
     /**
@@ -112,24 +126,29 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
         client.getCurrentLocation(LocationRequest.PRIORITY_HIGH_ACCURACY, null).addOnSuccessListener(location -> {
             LatLng driverCurrentLocation = new LatLng(location.getLatitude(), location.getLongitude());
             driverCurrentLocationInstance = driverCurrentLocation;
-            DocumentReference docRef = db.collection("drivers").document(Objects.requireNonNull(auth.getCurrentUser()).getUid());
-            docRef.addSnapshotListener((value, error) -> {
-                if (error != null){
-                    Log.e("DriverMapsActivity", "Listen failed", error);
-                }
-
-                if (value != null && value.exists()){
-                    docRef.update("latitude", driverCurrentLocationInstance.latitude);
-                    docRef.update("longitude", driverCurrentLocationInstance.longitude);
-//                    Toast.makeText(DriverMapsActivity.this, "Driver is online" + driverCurrentLocationInstance, Toast.LENGTH_SHORT).show();
-                }
-                else{
-                    Toast.makeText(DriverMapsActivity.this, "Driver is offline", Toast.LENGTH_SHORT).show();
-                }
-            });
+            if (checkSessionJoin)
+                joinSession();
             mMap.addMarker(new MarkerOptions().position(driverCurrentLocation).title("Your Location"));
             mMap.moveCamera(CameraUpdateFactory.newLatLng(driverCurrentLocation));
             mMap.animateCamera(CameraUpdateFactory.zoomTo(14));
+        });
+    }
+
+    public void joinSession(){
+        DocumentReference docRef = db.collection("drivers").document(Objects.requireNonNull(auth.getCurrentUser()).getUid());
+        docRef.addSnapshotListener((value, error) -> {
+            if (error != null){
+                Log.e("DriverMapsActivity", "Listen failed", error);
+            }
+
+            if (value != null && value.exists()){
+                docRef.update("latitude", driverCurrentLocationInstance.latitude);
+                docRef.update("longitude", driverCurrentLocationInstance.longitude);
+                Toast.makeText(DriverMapsActivity.this, "Driver is online" + driverCurrentLocationInstance, Toast.LENGTH_SHORT).show();
+            }
+            else{
+                Toast.makeText(DriverMapsActivity.this, "Driver is offline", Toast.LENGTH_SHORT).show();
+            }
         });
     }
 }
