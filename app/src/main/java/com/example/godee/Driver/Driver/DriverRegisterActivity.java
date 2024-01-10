@@ -3,6 +3,7 @@ package com.example.godee.Driver.Driver;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -32,6 +33,16 @@ public class DriverRegisterActivity extends AppCompatActivity {
         TextInputEditText nationality = findViewById(R.id.nationality);
 
         Button driverRegisterButton = findViewById(R.id.btn_register_driver);
+
+        TextView loginNow = findViewById(R.id.loginNow);
+        loginNow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(DriverRegisterActivity.this, DriverLoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
 
         driverRegisterButton.setOnClickListener(v -> {
             String emailText = String.valueOf(email.getText());
@@ -73,4 +84,5 @@ public class DriverRegisterActivity extends AppCompatActivity {
             }
         });
     }
+
 }
