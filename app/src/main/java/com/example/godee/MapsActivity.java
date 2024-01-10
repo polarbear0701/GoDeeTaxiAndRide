@@ -7,7 +7,6 @@ import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -16,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
+
 import com.example.godee.databinding.ActivityMapsBinding;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
@@ -34,6 +34,7 @@ import com.google.maps.android.PolyUtil;
 import com.google.maps.model.DirectionsLeg;
 import com.google.maps.model.DirectionsResult;
 import com.google.maps.model.DirectionsStep;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -196,8 +197,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
             }
             mMap.addPolyline(new PolylineOptions().addAll(path).color(Color.BLUE));
-            LinearLayout carBookingUI = findViewById(R.id.carBookingUI);
-            carBookingUI.setVisibility(View.VISIBLE);
+            LinearLayout bookingView = findViewById(R.id.bookingView);
+            bookingView.setVisibility(View.VISIBLE);
 
         } catch (Exception e) {
             e.printStackTrace();
