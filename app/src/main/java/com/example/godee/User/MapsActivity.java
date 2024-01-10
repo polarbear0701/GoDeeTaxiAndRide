@@ -197,8 +197,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
             }
             mMap.addPolyline(new PolylineOptions().addAll(path).color(Color.BLUE));
-            LinearLayout carBookingUI = findViewById(R.id.bookingView);
-            carBookingUI.setVisibility(View.VISIBLE);
+            LinearLayout BookingUI = findViewById(R.id.bookingView);
+            BookingUI.setVisibility(View.VISIBLE);
 
         } catch (Exception e) {
             e.printStackTrace();
