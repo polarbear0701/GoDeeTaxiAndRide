@@ -1,4 +1,4 @@
-package com.example.godee;
+package com.example.godee.Driver.Driver;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,7 +11,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.godee.ModelClass.DriverModel;
+import com.example.godee.Driver.Driver.ModelClass.DriverModel;
+import com.example.godee.User.LoginPageActivity;
+import com.example.godee.User.MapsActivity;
+import com.example.godee.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;

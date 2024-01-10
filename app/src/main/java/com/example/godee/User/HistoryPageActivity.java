@@ -1,10 +1,11 @@
-package com.example.godee;
+package com.example.godee.User;
 
 import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.godee.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class HistoryPageActivity extends AppCompatActivity {
@@ -15,7 +16,7 @@ public class HistoryPageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_history_page);
 
         BottomNavigationView pageMenu = findViewById(R.id.page_navigation);
-        pageMenu.setSelectedItemId(R.id.actiivty_history);
+        pageMenu.setSelectedItemId(R.id.activity_history);
         pageNavigation(pageMenu);
     }
 
@@ -27,7 +28,7 @@ public class HistoryPageActivity extends AppCompatActivity {
                 startActivity(intent);
                 finish();
             }
-            if (itemId == R.id.actiivty_history){
+            if (itemId == R.id.activity_history){
                 return true;
             }
             if (itemId == R.id.activity_profile){

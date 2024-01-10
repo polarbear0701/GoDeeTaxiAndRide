@@ -1,4 +1,4 @@
-package com.example.godee;
+package com.example.godee.User;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.godee.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -91,7 +92,7 @@ public class ProfileActivity extends AppCompatActivity {
             if (itemId == R.id.activity_profile){
                 return true;
             }
-            if (itemId == R.id.actiivty_history){
+            if (itemId == R.id.activity_history){
                 Intent intent = new Intent(getApplicationContext(), HistoryPageActivity.class);
                 startActivity(intent);
                 finish();

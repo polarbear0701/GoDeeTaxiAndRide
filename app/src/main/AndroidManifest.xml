@@ -20,7 +20,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.GoDee"
         tools:targetApi="31">
-
+        <activity
+            android:name=".Driver.Driver.DriverProfileActivity"
+            android:exported="false" />
         <!--
              TODO: Before you run your application, you need a Google Maps API key.
 
@@ -37,23 +39,23 @@
             android:value="AIzaSyA-qGgUm9sSW2Kg8QX47yPofhaiVp14tAs" />
 
         <activity
-            android:name=".DriverMapsActivity"
+            android:name=".Driver.Driver.DriverMapsActivity"
             android:exported="false"
             android:label="@string/title_activity_driver_maps" />
         <activity
-            android:name=".UserSettingActivity"
+            android:name=".User.UserSettingActivity"
             android:exported="false" />
         <activity
-            android:name=".UserInfoActivity"
+            android:name=".User.UserInfoActivity"
             android:exported="false" />
         <activity
-            android:name=".HistoryPageActivity"
+            android:name=".User.HistoryPageActivity"
             android:exported="false" />
         <activity
-            android:name=".DriverRegisterActivity"
+            android:name=".Driver.Driver.DriverRegisterActivity"
             android:exported="false" />
         <activity
-            android:name=".DriverLoginActivity"
+            android:name=".Driver.Driver.DriverLoginActivity"
             android:exported="false" />
 
         <meta-data
@@ -61,20 +63,20 @@
             android:value="@integer/google_play_services_version" />
 
         <activity
-            android:name=".MapsActivity"
+            android:name=".User.MapsActivity"
             android:exported="false"
             android:label="@string/title_activity_maps" /> <!-- <activity -->
         <!-- android:name=".MainActivity" -->
         <!-- android:exported="true" -->
         <!-- android:label="@string/title_activity_main" /> -->
         <activity
-            android:name=".ProfileActivity"
+            android:name=".User.ProfileActivity"
             android:exported="false" />
         <activity
-            android:name=".RegisterActivity"
+            android:name=".User.RegisterActivity"
             android:exported="false" />
         <activity
-            android:name=".LoginPageActivity"
+            android:name=".User.LoginPageActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

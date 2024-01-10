@@ -1,4 +1,4 @@
-package com.example.godee.ModelClass;
+package com.example.godee.Driver.Driver.ModelClass;
 
 public class UserHistory {
     private String date;

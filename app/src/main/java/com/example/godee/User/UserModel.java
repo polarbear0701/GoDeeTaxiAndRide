@@ -1,4 +1,4 @@
-package com.example.godee;
+package com.example.godee.User;
 
 public class UserModel {
     private String name;

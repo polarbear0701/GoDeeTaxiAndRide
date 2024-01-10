@@ -1,4 +1,4 @@
-package com.example.godee;
+package com.example.godee.Driver.Driver;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -6,16 +6,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
-import com.example.godee.databinding.ActivityDriverMapsBinding;
+import com.example.godee.R;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
@@ -25,13 +23,11 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.util.Objects;
 
@@ -64,23 +60,19 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
 
-        com.example.godee.databinding.ActivityDriverMapsBinding binding = ActivityDriverMapsBinding.inflate(getLayoutInflater());
+        com.example.godee.databinding.ActivityDriverMapsBinding binding = com.example.godee.databinding.ActivityDriverMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        Button driverLogOutBtn = findViewById(R.id.btn_logout_driver);
+        // Initiate content for page navigation bar
+        BottomNavigationView driverPageMenu = findViewById(R.id.driver_page_navigation);
+        driverPageMenu.setSelectedItemId(R.id.driver_activity_home);
+        driverPageNavigation(driverPageMenu);
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         assert mapFragment != null;
         mapFragment.getMapAsync(this);
-
-        driverLogOutBtn.setOnClickListener(v -> {
-            auth.signOut();
-            Intent backToLogin = new Intent(getApplicationContext(), DriverLoginActivity.class);
-            startActivity(backToLogin);
-            finish();
-        });
         handler = new Handler();
         handler.postDelayed(runnable = () -> {
             mMap.clear();
@@ -94,6 +86,36 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
             checkSessionJoin = true;
         });
 
+    }
+
+    // Function for page navigation (bottom navigation bar)
+    public void driverPageNavigation(BottomNavigationView driverPageMenu) {
+        driverPageMenu.setOnItemSelectedListener(item ->
+        {   int itemId = item.getItemId();
+            if (itemId == R.id.driver_activity_home){
+                // Start new activity base on the item selected on the navigation bar
+                // If the current tab is equal to the selected item only need to set this if-statement to return true
+                return true;
+            }
+            if (itemId == R.id.driver_activity_profile){
+                Intent intent = new Intent(getApplicationContext(), DriverProfileActivity.class);
+                startActivity(intent);
+                finish();
+            }
+            if (itemId == R.id.driver_activity_history){
+                Intent intent = new Intent(getApplicationContext(), DriverHistoryActivity.class);
+                startActivity(intent);
+                finish();
+            }
+            // This part is expandable base on the number of tab need for the application
+            /* Structure
+               if (itemId == R.id.[name of the item]){
+               Intent intent = new Intent(getApplicationContext(), [insert the activity associated with the icon].class);
+               startActivity(intent);
+               finish();}
+             */
+            return true;
+        });
     }
 
     /**

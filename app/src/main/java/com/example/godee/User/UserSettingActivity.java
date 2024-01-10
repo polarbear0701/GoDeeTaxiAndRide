@@ -1,8 +1,10 @@
-package com.example.godee;
+package com.example.godee.User;
+
+import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.os.Bundle;
+import com.example.godee.R;
 
 public class UserSettingActivity extends AppCompatActivity {
 

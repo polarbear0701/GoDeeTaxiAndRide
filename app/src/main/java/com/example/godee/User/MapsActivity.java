@@ -1,4 +1,4 @@
-package com.example.godee;
+package com.example.godee.User;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -7,14 +7,14 @@ import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
-import com.example.godee.databinding.ActivityMapsBinding;
+
+import com.example.godee.R;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
@@ -51,7 +51,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         super.onCreate(savedInstanceState);
 
-        com.example.godee.databinding.ActivityMapsBinding binding = ActivityMapsBinding.inflate(getLayoutInflater());
+        com.example.godee.databinding.ActivityMapsBinding binding = com.example.godee.databinding.ActivityMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         BottomNavigationView pageMenu = findViewById(R.id.page_navigation);
@@ -161,7 +161,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 startActivity(intent);
                 finish();
             }
-            if (itemId == R.id.actiivty_history){
+            if (itemId == R.id.activity_history){
                 Intent intent = new Intent(getApplicationContext(),HistoryPageActivity.class);
                 startActivity(intent);
                 finish();

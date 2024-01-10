@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:gravity="center"
     android:background="@drawable/login_driver"
-    tools:context=".DriverLoginActivity">
+    tools:context=".Driver.Driver.DriverLoginActivity">
 
     <TextView
         android:layout_width="wrap_content"
