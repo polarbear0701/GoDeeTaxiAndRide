@@ -103,7 +103,7 @@ public class ChatActivity extends AppCompatActivity {
 
         db.collection("chats").document(chatId)
                 .collection("messages")
-                //.orderBy("timestamp")
+                .orderBy("timestamp")
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot snapshots,
@@ -114,12 +114,12 @@ public class ChatActivity extends AppCompatActivity {
                         }
 
                         for (DocumentChange dc : snapshots.getDocumentChanges()) {
-//                            if (dc.getType() == DocumentChange.Type.ADDED) {
+                            if (dc.getType() == DocumentChange.Type.ADDED) {
                                 DocumentSnapshot document = dc.getDocument();
                                 MessageModel message = document.toObject(MessageModel.class);
-                                Log.d("TestChatActivity", "Fetched message: " + message.getMessage());
+                                Log.d("TestChatActivity", "Fetched message: " + message.getText());
                                 messageList.add(message);
-                            //}
+                            }
                         }
 
 

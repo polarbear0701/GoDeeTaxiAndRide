@@ -3,25 +3,25 @@ package com.example.godee.ModelClass;
 import com.google.firebase.Timestamp;
 
 public class MessageModel {
-    private String text;
+    private String text; // Updated field name to match Firestore
     private String senderId;
     private Timestamp timestamp;
 
     public MessageModel() {
     }
 
-    public MessageModel(String message, String senderId, Timestamp timestamp) {
-        this.text = message;
+    public MessageModel(String text, String senderId, Timestamp timestamp) {
+        this.text = text;
         this.senderId = senderId;
         this.timestamp = timestamp;
     }
 
-    public String getMessage() {
+    public String getText() { // Updated method name
         return text;
     }
 
-    public void setMessage(String message) {
-        this.text = message;
+    public void setText(String text) { // Updated method name
+        this.text = text;
     }
 
     public String getSenderId() {
