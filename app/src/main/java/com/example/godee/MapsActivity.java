@@ -163,34 +163,42 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     // Function for page navigation (bottom navigation bar)
     public void pageNavigation(BottomNavigationView pageMenu) {
-        pageMenu.setOnItemSelectedListener(item ->
-        {   int itemId = item.getItemId();
-            if (itemId == R.id.activity_home){
-                // Start new activity base on the item selected on the navigation bar
-                // If the current tab is equal to the selected item only need to set this if-statement to return true
-                return true;
-            }
-            if (itemId == R.id.activity_profile){
-                Intent intent = new Intent(getApplicationContext(),ProfileActivity.class);
-                startActivity(intent);
-                finish();
-            }
-            if (itemId == R.id.actiivty_history){
-                Intent intent = new Intent(getApplicationContext(),HistoryPageActivity.class);
-                startActivity(intent);
-                finish();
-            }
-            // This part is expandable base on the number of tab need for the application
-            /* Structure
+        pageMenu.setOnItemSelectedListener(item -> {
+            final ProgressDialog progressDialog = new ProgressDialog(MapsActivity.this);
+            progressDialog.setMessage("Loading...");
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+
+            // Handler to add a delay of 3 seconds
+            new Handler().postDelayed(() -> {
+                progressDialog.dismiss();
+
+                int itemId = item.getItemId();
+                if (itemId == R.id.activity_home){
+                    // Delayed action for 'Home' tab
+                }
+                if (itemId == R.id.activity_profile){
+                    Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+                if (itemId == R.id.actiivty_history){
+                    Intent intent = new Intent(getApplicationContext(), HistoryPageActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+                // Additional navigation items can be handled similarly
+                            /* Structure:
                if (itemId == R.id.[name of the item]){
                Intent intent = new Intent(getApplicationContext(), [insert the activity associated with the icon].class);
                startActivity(intent);
                finish();}
              */
+            }, 1500);
+
             return true;
         });
     }
-
     private void drawRoute(LatLng origin, LatLng destination) {
         // Use a directions API client to get route information
         // Replace YOUR_API_KEY with your actual API key
