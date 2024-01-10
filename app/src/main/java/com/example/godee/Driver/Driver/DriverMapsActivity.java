@@ -40,9 +40,8 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     FusedLocationProviderClient client;
     Handler handler;
-    long refresh = 5000;
+    long refresh = 1000;
     Runnable runnable;
-    private Button joinSessionBtn;
     private Boolean checkSessionJoin = false;
 
     @Override
@@ -81,10 +80,8 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
 
         }, refresh);
 
-        joinSessionBtn = findViewById(R.id.btn);
-        joinSessionBtn.setOnClickListener(v -> {
-            checkSessionJoin = true;
-        });
+        Button joinSessionBtn = findViewById(R.id.btn);
+        joinSessionBtn.setOnClickListener(v -> checkSessionJoin = true);
 
     }
 
