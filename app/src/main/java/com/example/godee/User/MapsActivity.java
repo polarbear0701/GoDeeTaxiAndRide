@@ -182,8 +182,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void drawRoute(LatLng origin, LatLng destination) {
         // Use a directions API client to get route information
-        // Replace YOUR_API_KEY with your actual API key
-        DirectionsApiRequest request = new DirectionsApiRequest(new GeoApiContext.Builder().apiKey("AIzaSyAHUvfBiUgU0zaKO2TxG4oYKLl5geXMiwc").build());
+        // Primary key here: AIzaSyAHUvfBiUgU0zaKO2TxG4oYKLl5geXMiwc
+        // Replace with this key when exceed daily limit:  AIzaSyA-qGgUm9sSW2Kg8QX47yPofhaiVp14tAs
+        DirectionsApiRequest request = new DirectionsApiRequest(new GeoApiContext.Builder().apiKey("AIzaSyA-qGgUm9sSW2Kg8QX47yPofhaiVp14tAs").build());
         try {
             DirectionsResult result = request.origin(new com.google.maps.model.LatLng(origin.latitude, origin.longitude))
                     .destination(new com.google.maps.model.LatLng(destination.latitude, destination.longitude))
