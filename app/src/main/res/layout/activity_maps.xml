@@ -19,6 +19,15 @@
         android:layout_alignParentTop="true"
         tools:context=".MainActivity" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/locationSearch"
+        android:layout_centerHorizontal="true"
+        android:text="Book"
+        android:id="@+id/bookingBtn"
+        android:layout_marginHorizontal="10dp"/>
+
     <androidx.appcompat.widget.SearchView
         android:layout_width="match_parent"
         android:layout_height="50dp"

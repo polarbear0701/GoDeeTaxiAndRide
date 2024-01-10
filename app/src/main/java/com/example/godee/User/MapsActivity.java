@@ -8,6 +8,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -53,6 +54,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         client = LocationServices.getFusedLocationProviderClient(MapsActivity.this);
 
         super.onCreate(savedInstanceState);
+
+        Button booking = findViewById(R.id.bookingBtn);
 
         com.example.godee.databinding.ActivityMapsBinding binding = com.example.godee.databinding.ActivityMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -115,9 +118,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
         getUserCurrentPosition();
-
-
-
         //set padding for zoom control
         mMap.getUiSettings().setZoomControlsEnabled(true);
         mMap.setPadding(0, 0,0, 400);
@@ -197,9 +197,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
             }
             mMap.addPolyline(new PolylineOptions().addAll(path).color(Color.BLUE));
-            LinearLayout BookingUI = findViewById(R.id.bookingView);
-            BookingUI.setVisibility(View.VISIBLE);
-
+            LinearLayout bookingUI = findViewById(R.id.bookingView);
+            bookingUI.setVisibility(View.VISIBLE);
         } catch (Exception e) {
             e.printStackTrace();
             // Handle errors, such as network issues or no route found
