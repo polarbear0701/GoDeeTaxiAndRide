@@ -13,5 +13,5 @@
     <color name="light_teal">#81CAD6</color>
     <color name="vermillion">#EDCD44</color>
     <color name="orange">#DC3E26</color>
-
+    <color name="button_color">#FF6200EE</color>
 </resources>

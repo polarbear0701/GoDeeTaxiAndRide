@@ -33,6 +33,60 @@
         android:background="@drawable/search_bar_map"
         />
 
+    <LinearLayout
+        android:id="@+id/carBookingUI"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_above="@+id/page_navigation"
+        android:background="@drawable/rounded_corner_transparent"
+        android:padding="16dp"
+        android:layout_marginHorizontal="10dp"
+        android:elevation="12dp"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="8dp">
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_car" />
+
+            <!-- Car Details -->
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:layout_height="wrap_content"
+                android:text="GoDee Plus"
+                android:textSize="18sp"
+                android:layout_gravity="center_vertical" />
+
+            <!-- Car Price -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="72.000đ"
+                android:textSize="18sp"
+                android:layout_gravity="center_vertical"
+                android:paddingEnd="16dp" />
+        </LinearLayout>
+
+
+        <Button
+            android:id="@+id/btnConfirmBooking"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Confirm for Booking"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="@color/button_color"
+            android:elevation="8dp" />
+    </LinearLayout>
+
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -41,7 +95,9 @@
         android:layout_marginBottom="10dp"
         android:id="@+id/page_navigation"
         android:background="@drawable/page_navigation_outline"
-        map:menu="@menu/navigation_menu">
+        map:menu="@menu/navigation_menu"
+        android:elevation="16dp">
     </com.google.android.material.bottomnavigation.BottomNavigationView>
+
 
 </RelativeLayout>

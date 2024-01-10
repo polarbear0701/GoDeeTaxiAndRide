@@ -8,6 +8,8 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -194,6 +196,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
             }
             mMap.addPolyline(new PolylineOptions().addAll(path).color(Color.BLUE));
+            LinearLayout carBookingUI = findViewById(R.id.carBookingUI);
+            carBookingUI.setVisibility(View.VISIBLE);
 
         } catch (Exception e) {
             e.printStackTrace();
