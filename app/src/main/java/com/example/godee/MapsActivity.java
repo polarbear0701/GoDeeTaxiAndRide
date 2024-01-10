@@ -10,11 +10,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
-
+import android.app.ProgressDialog;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
+import android.os.Handler;
 
 import com.example.godee.databinding.ActivityMapsBinding;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -70,27 +71,38 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                String location = searchView.getQuery().toString();
-                List<Address> addressList = null;
-                Geocoder geocoder = new Geocoder(MapsActivity.this);
-                try {
-                    addressList = geocoder.getFromLocationName(location, 1);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                assert addressList != null;
-                if (addressList.size() == 0) {
-                    Toast.makeText(MapsActivity.this, "Location not found", Toast.LENGTH_SHORT).show();
-                }
-                else {
-                    Address address = addressList.get(0);
-                    LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
-                    drawRoute(userCurrentLocationInstance, latLng);
-                    mMap.addMarker(new MarkerOptions().position(latLng).title(location));
-                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
-                    Toast.makeText(MapsActivity.this, userCurrentLocationInstance.latitude + " " + userCurrentLocationInstance.longitude, Toast.LENGTH_SHORT).show();
-                    Toast.makeText(MapsActivity.this, query, Toast.LENGTH_SHORT).show();
-                }
+                final ProgressDialog progressDialog = new ProgressDialog(MapsActivity.this);
+                progressDialog.setMessage("Searching...");
+                progressDialog.setCancelable(false);
+                progressDialog.show();
+
+                // Handler to add a delay of 3 seconds
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressDialog.dismiss();
+
+                        String location = searchView.getQuery().toString();
+                        List<Address> addressList = null;
+                        Geocoder geocoder = new Geocoder(MapsActivity.this);
+                        try {
+                            addressList = geocoder.getFromLocationName(location, 1);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                        if (addressList != null && addressList.size() > 0) {
+                            Address address = addressList.get(0);
+                            LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
+                            drawRoute(userCurrentLocationInstance, latLng);
+                            mMap.addMarker(new MarkerOptions().position(latLng).title(location));
+                            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
+                        } else {
+                            Toast.makeText(MapsActivity.this, "Location not found", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }, 3000);
+
                 return false;
             }
 
@@ -98,7 +110,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public boolean onQueryTextChange(String newText) {
                 return false;
             }
-
         });
     }
 

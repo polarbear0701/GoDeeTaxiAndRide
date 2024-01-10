@@ -1,5 +1,6 @@
 package com.example.godee;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -37,7 +38,8 @@ public class LoginPageActivity extends AppCompatActivity {
         }
 
         TextView textView;
-        Button loginButton;
+
+        Button loginButton = findViewById(R.id.btn_login);
         EditText emailSignIn, passwordSignIn;
 
         Objects.requireNonNull(getSupportActionBar()).hide();
@@ -62,47 +64,57 @@ public class LoginPageActivity extends AppCompatActivity {
         });
 
         loginButton.setOnClickListener(v -> {
-            String email;
-            String password;
-            hideKeyboard(v);
+            ProgressDialog progressDialog = new ProgressDialog(LoginPageActivity.this);
+            progressDialog.setMessage("Logging in...");
+            progressDialog.setCancelable(false);
+            progressDialog.show();
 
+            new Thread(() -> {
+                try {
+                    // Simulate a loading time of 2 seconds
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
 
-            email = String.valueOf(emailSignIn.getText());
-            password = String.valueOf(passwordSignIn.getText());
+                // Proceed with the login process on the UI thread
+                runOnUiThread(() -> {
+                    progressDialog.dismiss();
+                    String email = String.valueOf(emailSignIn.getText());
+                    String password = String.valueOf(passwordSignIn.getText());
+                    hideKeyboard(v);
 
-            if (email.isEmpty() || password.isEmpty()){
-                //Toast empty
-                Toast.makeText(LoginPageActivity.this, "Please fill in all the fields!", Toast.LENGTH_SHORT).show();
-                return;
-            }
+                    if (email.isEmpty() || password.isEmpty()) {
+                        Toast.makeText(LoginPageActivity.this, "Please fill in all the fields!", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
 
+                    FirebaseFirestore db = FirebaseFirestore.getInstance();
+                    mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            DocumentReference documentReference = db.collection("users").document(Objects.requireNonNull(mAuth.getUid()));
+                            documentReference.get().addOnSuccessListener(documentSnapshot -> {
+                                UserModel modelTemp = documentSnapshot.toObject(UserModel.class);
+                                assert modelTemp != null;
+                                if (modelTemp.getAccountType() != 100) {
+                                    Toast.makeText(LoginPageActivity.this, "You are a driver, please login in driver page!", Toast.LENGTH_SHORT).show();
+                                    mAuth.signOut();
+                                } else {
+                                    Toast.makeText(LoginPageActivity.this, "Login successfully!", Toast.LENGTH_SHORT).show();
+                                    Intent toHomePage = new Intent(LoginPageActivity.this, MapsActivity.class);
+                                    startActivity(toHomePage);
+                                    finish();
+                                }
+                            });
 
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
-            mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
-                if (task.isSuccessful()){
-
-                    DocumentReference documentReference = db.collection("users").document(Objects.requireNonNull(mAuth.getUid()));
-                    documentReference.get().addOnSuccessListener(documentSnapshot -> {
-                        UserModel modelTemp = documentSnapshot.toObject(UserModel.class);
-                        assert modelTemp != null;
-                        if (modelTemp.getAccountType() != 100){
-                            Toast.makeText(LoginPageActivity.this, "You are a driver, please login in driver page!", Toast.LENGTH_SHORT).show();
-                            mAuth.signOut();
-                        }
-                        else{
-                            Toast.makeText(LoginPageActivity.this, "Login successfully!", Toast.LENGTH_SHORT).show();
-                            Intent toHomePage = new Intent(LoginPageActivity.this, MapsActivity.class);
-                            startActivity(toHomePage);
-                            finish();
+                        } else {
+                            Toast.makeText(LoginPageActivity.this, "Login failed!", Toast.LENGTH_SHORT).show();
                         }
                     });
-
-                }
-                else{
-                    Toast.makeText(LoginPageActivity.this, "Login failed!", Toast.LENGTH_SHORT).show();
-                }
-            });
+                });
+            }).start();
         });
+
     }
 
     private void hideKeyboard(View view) {
