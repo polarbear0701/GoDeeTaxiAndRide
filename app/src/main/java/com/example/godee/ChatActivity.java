@@ -1,23 +1,29 @@
 package com.example.godee;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.godee.ModelClass.MessageModel;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -36,6 +42,8 @@ public class ChatActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private MessageAdapter messageAdapter;
     private List<MessageModel> messageList;
+    private static final String CHANNEL_ID = "chat_notifications";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,7 +75,7 @@ public class ChatActivity extends AppCompatActivity {
                 }
             }
         });
-
+        createNotificationChannel();
         listenForMessages(); // Start listening for messages
     }
     private String generateChatId(String currentUserID, String otherUserID) {
@@ -99,8 +107,6 @@ public class ChatActivity extends AppCompatActivity {
 
     private void listenForMessages() {
         String chatId = generateChatId(currentUserID, otherUserID);
-        Log.d("TestChatID", "Listening for messages in chat: " + chatId);
-
         db.collection("chats").document(chatId)
                 .collection("messages")
                 .orderBy("timestamp")
@@ -119,17 +125,59 @@ public class ChatActivity extends AppCompatActivity {
                                 MessageModel message = document.toObject(MessageModel.class);
                                 Log.d("TestChatActivity", "Fetched message: " + message.getText());
                                 messageList.add(message);
+
+                                // Check if the current user is not the sender of the message
+                                if (!message.getSenderId().equals(currentUserID)) {
+                                    createNotification(message.getText());
+                                }
                             }
                         }
-
-
-                        messageAdapter.notifyDataSetChanged(); // Notify adapter of data change
+                        messageAdapter.notifyDataSetChanged();
                         if (messageList.size() > 0) {
-                            recyclerView.smoothScrollToPosition(messageList.size() - 1); // Scroll to the bottom
+                            recyclerView.smoothScrollToPosition(messageList.size() - 1);
                         }
                     }
                 });
     }
+
+
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = getString(R.string.channel_name);
+            String description = getString(R.string.channel_description);
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+    private void createNotification(String messageBody) {
+        Intent intent = new Intent(this, ChatActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+        // Specify the PendingIntent flag based on the Android version
+        int flags = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ?
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE :
+                PendingIntent.FLAG_UPDATE_CURRENT;
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, flags);
+
+        NotificationCompat.Builder notificationBuilder =
+                new NotificationCompat.Builder(this, CHANNEL_ID)
+                        .setSmallIcon(R.drawable.icon_send)
+                        .setContentTitle("New Message")
+                        .setContentText(messageBody)
+                        .setAutoCancel(true)
+                        .setContentIntent(pendingIntent);
+
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(0, notificationBuilder.build());
+    }
+
+
+
+
 
 
 }

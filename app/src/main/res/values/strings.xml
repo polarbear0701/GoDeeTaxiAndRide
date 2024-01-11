@@ -9,4 +9,6 @@
     <string name="title_activity_maps">MapsActivity</string>
     <string name="driver_login">Driver Login</string>
     <string name="title_activity_driver_maps">DriverMapsActivity</string>
+    <string name="channel_name">Chat Notifications</string>
+    <string name="channel_description">Notifications for new chat messages</string>
 </resources>
