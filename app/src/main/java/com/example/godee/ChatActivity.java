@@ -79,6 +79,20 @@ public class ChatActivity extends AppCompatActivity {
         listenForMessages(); // Start listening for messages
     }
     private String generateChatId(String currentUserID, String otherUserID) {
+        db = FirebaseFirestore.getInstance();
+        ArrayList<String> al = new ArrayList<>();
+        db.collection("drivers").get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        for (DocumentSnapshot document : task.getResult()) {
+                            al.add(document.getId());
+//                            Log.d("TestChatActivity", document.getId() + " => " + document.getData());
+                        }
+                        Log.d("TestChatActivity", currentUserID + "_" + al.get(2));
+                    } else {
+                        Log.d("TestChatActivity", "Error getting documents: ", task.getException());
+                    }
+                });
         if (currentUserID.compareTo(otherUserID) < 0) {
             return currentUserID + "_" + otherUserID;
         } else {
