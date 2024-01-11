@@ -2,9 +2,16 @@ package com.example.godee;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -36,6 +43,8 @@ public class ChatActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private MessageAdapter messageAdapter;
     private List<MessageModel> messageList;
+    private static final String CHANNEL_ID = "chat_notifications";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,7 +76,7 @@ public class ChatActivity extends AppCompatActivity {
                 }
             }
         });
-
+        createNotificationChannel();
         listenForMessages(); // Start listening for messages
     }
     private String generateChatId(String currentUserID, String otherUserID) {
@@ -99,8 +108,6 @@ public class ChatActivity extends AppCompatActivity {
 
     private void listenForMessages() {
         String chatId = generateChatId(currentUserID, otherUserID);
-        Log.d("TestChatID", "Listening for messages in chat: " + chatId);
-
         db.collection("chats").document(chatId)
                 .collection("messages")
                 .orderBy("timestamp")
@@ -119,17 +126,49 @@ public class ChatActivity extends AppCompatActivity {
                                 MessageModel message = document.toObject(MessageModel.class);
                                 Log.d("TestChatActivity", "Fetched message: " + message.getText());
                                 messageList.add(message);
+
+                                // Create a notification for this new message
+                                createNotification(message.getText());
                             }
                         }
 
-
-                        messageAdapter.notifyDataSetChanged(); // Notify adapter of data change
+                        messageAdapter.notifyDataSetChanged();
                         if (messageList.size() > 0) {
-                            recyclerView.smoothScrollToPosition(messageList.size() - 1); // Scroll to the bottom
+                            recyclerView.smoothScrollToPosition(messageList.size() - 1);
                         }
                     }
                 });
     }
+
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = getString(R.string.channel_name);
+            String description = getString(R.string.channel_description);
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+    private void createNotification(String messageBody) {
+        Intent intent = new Intent(this, ChatActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        NotificationCompat.Builder notificationBuilder =
+                new NotificationCompat.Builder(this, CHANNEL_ID)
+                        .setContentTitle("New Message")
+                        .setContentText(messageBody)
+                        .setAutoCancel(true)
+                        .setContentIntent(pendingIntent);
+
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(0, notificationBuilder.build());
+    }
+
+
+
 
 
 }
