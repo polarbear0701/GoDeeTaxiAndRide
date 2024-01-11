@@ -35,7 +35,7 @@ import java.util.Map;
 
 public class ChatActivity extends AppCompatActivity {
     private String currentUserID;
-    private String otherUserID = "B8mGA5CneegIQK843OlNkpeFGOB3"; // Hardcoded other user ID
+    private String otherUserID = "2XSlmylRYNTcTjyr8LwFj5AcPgE3"; // Hardcoded other user ID
     private FirebaseFirestore db;
     private EditText messageInput;
     private ImageButton sendButton;
@@ -126,11 +126,12 @@ public class ChatActivity extends AppCompatActivity {
                                 Log.d("TestChatActivity", "Fetched message: " + message.getText());
                                 messageList.add(message);
 
-                                // Create a notification for this new message
-                                createNotification(message.getText());
+                                // Check if the current user is not the sender of the message
+                                if (!message.getSenderId().equals(currentUserID)) {
+                                    createNotification(message.getText());
+                                }
                             }
                         }
-
                         messageAdapter.notifyDataSetChanged();
                         if (messageList.size() > 0) {
                             recyclerView.smoothScrollToPosition(messageList.size() - 1);
@@ -138,6 +139,7 @@ public class ChatActivity extends AppCompatActivity {
                     }
                 });
     }
+
 
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -153,7 +155,13 @@ public class ChatActivity extends AppCompatActivity {
     private void createNotification(String messageBody) {
         Intent intent = new Intent(this, ChatActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        // Specify the PendingIntent flag based on the Android version
+        int flags = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ?
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE :
+                PendingIntent.FLAG_UPDATE_CURRENT;
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, flags);
 
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(this, CHANNEL_ID)
@@ -166,6 +174,7 @@ public class ChatActivity extends AppCompatActivity {
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(0, notificationBuilder.build());
     }
+
 
 
 
