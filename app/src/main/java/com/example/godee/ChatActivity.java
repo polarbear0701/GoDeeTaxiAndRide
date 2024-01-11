@@ -1,11 +1,5 @@
 package com.example.godee;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -15,16 +9,21 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.godee.ModelClass.MessageModel;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -36,7 +35,7 @@ import java.util.Map;
 
 public class ChatActivity extends AppCompatActivity {
     private String currentUserID;
-    private String otherUserID = "2XSlmylRYNTcTjyr8LwFj5AcPgE3"; // Hardcoded other user ID
+    private String otherUserID = "B8mGA5CneegIQK843OlNkpeFGOB3"; // Hardcoded other user ID
     private FirebaseFirestore db;
     private EditText messageInput;
     private ImageButton sendButton;
@@ -158,6 +157,7 @@ public class ChatActivity extends AppCompatActivity {
 
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(this, CHANNEL_ID)
+                        .setSmallIcon(R.drawable.icon_send)
                         .setContentTitle("New Message")
                         .setContentText(messageBody)
                         .setAutoCancel(true)
