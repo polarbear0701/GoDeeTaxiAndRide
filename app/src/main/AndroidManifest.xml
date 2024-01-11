@@ -23,6 +23,9 @@
         <activity
             android:name=".Driver.Driver.DriverProfileActivity"
             android:exported="false" />
+        <activity
+            android:name=".ChatActivity"
+            android:exported="false" />
         <!--
              TODO: Before you run your application, you need a Google Maps API key.
 

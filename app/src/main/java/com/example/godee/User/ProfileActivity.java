@@ -16,7 +16,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 public class ProfileActivity extends AppCompatActivity {
 
-    private Button logoutButton;
+    private Button logoutButton, chatButton;
     private TextView userEdit, settingEdit;
 
     FirebaseAuth auth;
@@ -77,6 +77,16 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 userSignOut();
+            }
+        });
+
+        chatButton = findViewById(R.id.chatButton);
+        chatButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ProfileActivity.this, ChatActivity.class);
+                intent.putExtra("CURRENT_USER_ID", user.getUid());
+                startActivity(intent);
             }
         });
     }
