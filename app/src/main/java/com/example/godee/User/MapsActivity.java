@@ -184,6 +184,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Use a directions API client to get route information
         // Primary key here: AIzaSyAHUvfBiUgU0zaKO2TxG4oYKLl5geXMiwc
         // Replace with this key when exceed daily limit:  AIzaSyA-qGgUm9sSW2Kg8QX47yPofhaiVp14tAs
+        LinearLayout bookingUI = findViewById(R.id.bookingView);
+        bookingUI.setVisibility(View.VISIBLE);
         DirectionsApiRequest request = new DirectionsApiRequest(new GeoApiContext.Builder().apiKey("AIzaSyA-qGgUm9sSW2Kg8QX47yPofhaiVp14tAs").build());
         try {
             DirectionsResult result = request.origin(new com.google.maps.model.LatLng(origin.latitude, origin.longitude))
@@ -198,8 +200,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
             }
             mMap.addPolyline(new PolylineOptions().addAll(path).color(Color.BLUE));
-            LinearLayout bookingUI = findViewById(R.id.bookingView);
-            bookingUI.setVisibility(View.VISIBLE);
+//            LinearLayout bookingUI = findViewById(R.id.bookingView);
+//            bookingUI.setVisibility(View.VISIBLE);
         } catch (Exception e) {
             e.printStackTrace();
             // Handle errors, such as network issues or no route found
