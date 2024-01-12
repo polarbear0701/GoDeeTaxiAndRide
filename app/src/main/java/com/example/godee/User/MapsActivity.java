@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -18,6 +19,7 @@ import androidx.appcompat.widget.SearchView;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
+import com.example.godee.Driver.Driver.ModelClass.DriverModel;
 import com.example.godee.R;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
@@ -30,6 +32,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.maps.DirectionsApiRequest;
 import com.google.maps.DistanceMatrixApi;
 import com.google.maps.GeoApiContext;
@@ -41,6 +47,8 @@ import com.google.maps.model.DistanceMatrix;
 import com.google.maps.model.TravelMode;
 import com.google.maps.model.Unit;
 
+import org.w3c.dom.Text;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +59,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap mMap;
     private LatLng userCurrentLocationInstance;
     private FusedLocationProviderClient client;
+    int price = 0;
+//    TextView priceView = findViewById(R.id.pricing);
+
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
 
     @Override
@@ -63,8 +75,32 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         setContentView(binding.getRoot());
 
         Button confirmBooking = findViewById(R.id.btnConfirmBooking);
+
         confirmBooking.setOnClickListener(v -> {
             Toast.makeText(this, "Booking confirmed", Toast.LENGTH_SHORT).show();
+            CollectionReference onlineDriver = db.collection("drivers");
+            onlineDriver.whereEqualTo("inSession", true).get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    double minDistance = 500;
+                    String driverId = "";
+                    FirebaseAuth mAuth = FirebaseAuth.getInstance();
+
+                    for (int i = 0; i < task.getResult().size(); i++) {
+                        DriverModel temp = task.getResult().getDocuments().get(i).toObject(DriverModel.class);
+                        assert temp != null;
+                        LatLng driverLocation = new LatLng(temp.getLatitude(), temp.getLongitude());
+                        double distance = matchingAlgorithm(userCurrentLocationInstance, driverLocation);
+                        if (distance < minDistance && distance > 1) {
+                            minDistance = distance;
+                            driverId = task.getResult().getDocuments().get(i).getId();
+                        }
+                        Log.d("Driver" + i, task.getResult().getDocuments().get(i).getId() + " " +distance);
+                    }
+                    Log.d("Min distance", String.valueOf(minDistance) + " " + driverId);
+                    DocumentReference driver = db.collection("drivers").document(driverId);
+                    driver.update("currentGuest", mAuth.getCurrentUser().getUid());
+                }
+            });
         });
 
         BottomNavigationView pageMenu = findViewById(R.id.page_navigation);
@@ -93,6 +129,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     Toast.makeText(MapsActivity.this, "Location not found", Toast.LENGTH_SHORT).show();
                 }
                 else {
+//                    mMap.clear();
                     Address address = addressList.get(0);
                     LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
                     drawRoute(userCurrentLocationInstance, latLng);
@@ -194,6 +231,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Extra key AIzaSyC_RqsNZ4qaLg2r3iY5_zMipflMarUrZus
 //        AIzaSyB8ycsYUrwFVKgsW3aQ8OYx51NPm8TktMc
         LinearLayout bookingUI = findViewById(R.id.bookingView);
+        TextView priceView = findViewById(R.id.pricing);
         bookingUI.setVisibility(View.VISIBLE);
 
         String apiKey = "AIzaSyB8ycsYUrwFVKgsW3aQ8OYx51NPm8TktMc";
@@ -233,6 +271,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             // Access distance value in kilometers
             long distanceInMeters = distanceMatrix.rows[0].elements[0].distance.inMeters;
             double distanceInKilometers = distanceInMeters / 1000.0;
+            price = (int) (distanceInKilometers * 10000);
+            priceView.setText(String.valueOf(price));
             Toast.makeText(this, "Distance: " + distanceInKilometers + " km", Toast.LENGTH_SHORT).show();
             Log.d("Distance", "Distance: " + distanceInKilometers + " km");
         } catch (Exception e) {
@@ -240,5 +280,34 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Log.e("Error getting distance", e.getMessage());
             Toast.makeText(this, "Failed", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private double matchingAlgorithm(LatLng origin, LatLng destination){
+        String apiKey = "AIzaSyB8ycsYUrwFVKgsW3aQ8OYx51NPm8TktMc";
+        GeoApiContext context = new GeoApiContext.Builder()
+                .apiKey(apiKey)
+                .build();
+        com.google.maps.model.LatLng convertedOrigin = new com.google.maps.model.LatLng(origin.latitude, origin.longitude);
+        com.google.maps.model.LatLng convertedDestination = new com.google.maps.model.LatLng(destination.latitude, destination.longitude);
+        try{
+            DistanceMatrix distanceMatrix = DistanceMatrixApi.newRequest(context)
+                    .origins(convertedOrigin)
+                    .destinations(convertedDestination)
+                    .mode(TravelMode.DRIVING)
+                    .units(Unit.METRIC)
+                    .await();
+
+            // Access distance value in kilometers
+            long distanceInMeters = distanceMatrix.rows[0].elements[0].distance.inMeters;
+            double distanceInKilometers = distanceInMeters / 1000.0;
+            Toast.makeText(this, "Distance: " + distanceInKilometers + " km", Toast.LENGTH_SHORT).show();
+            Log.d("Distance", "Distance: " + distanceInKilometers + " km");
+            return distanceInKilometers;
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.e("Error getting distance", e.getMessage());
+            Toast.makeText(this, "Failed", Toast.LENGTH_SHORT).show();
+        }
+        return 0;
     }
 }

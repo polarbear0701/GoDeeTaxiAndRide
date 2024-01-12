@@ -79,7 +79,7 @@ public class DriverRegisterActivity extends AppCompatActivity {
                 driverDataRegister.collection("drivers").document(Objects.requireNonNull(driverAccount.getCurrentUser()).getUid()).set(driverModel);
                 Toast.makeText(DriverRegisterActivity.this, "Sign up as driver successfully", Toast.LENGTH_SHORT).show();
                 Intent backToLogin = new Intent(DriverRegisterActivity.this, DriverLoginActivity.class);
-                driverAccount.signOut();
+//                driverAccount.signOut();
                 startActivity(backToLogin);
                 finish();
             }

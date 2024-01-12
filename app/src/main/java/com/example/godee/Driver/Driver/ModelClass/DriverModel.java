@@ -9,6 +9,7 @@ public class DriverModel {
     private String nationality;
     private int accountType;
     private Double latitude, longitude;
+    private Boolean inSession;
 
     public DriverModel() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
@@ -21,6 +22,7 @@ public class DriverModel {
         this.age = age;
         this.nationality = nationality;
         this.accountType = accountType;
+        this.inSession = false;
     }
 
     public String getName() {
@@ -85,5 +87,13 @@ public class DriverModel {
 
     public void setAccountType(int accountType) {
         this.accountType = accountType;
+    }
+
+    public Boolean getInSession() {
+        return inSession;
+    }
+
+    public void setInSession(Boolean inSession) {
+        this.inSession = inSession;
     }
 }
