@@ -32,6 +32,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class ChatActivity extends AppCompatActivity {
     private String currentUserID;
@@ -57,10 +58,11 @@ public class ChatActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.recycler_view_messages); //
         messageList = new ArrayList<>();
-        messageAdapter = new MessageAdapter(messageList);
+        messageAdapter = new MessageAdapter(messageList, currentUserID);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(messageAdapter);
 
+        Objects.requireNonNull(getSupportActionBar()).hide();
         // Add test messages
         messageList.add(new MessageModel("Test message 1", currentUserID, new Timestamp(new Date())));
         messageList.add(new MessageModel("Test message 2", currentUserID, new Timestamp(new Date())));

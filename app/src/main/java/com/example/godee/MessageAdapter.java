@@ -14,9 +14,11 @@ import java.util.List;
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageViewHolder> {
 
     private List<MessageModel> messageList;
+    private String currentUserId;
 
-    public MessageAdapter(List<MessageModel> messageList) {
+    public MessageAdapter(List<MessageModel> messageList, String currentUserId) {
         this.messageList = messageList;
+        this.currentUserId = currentUserId;
     }
 
     @Override
@@ -28,8 +30,18 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     @Override
     public void onBindViewHolder(MessageViewHolder holder, int position) {
         MessageModel message = messageList.get(position);
-        holder.textMessage.setText(message.getText());
-        // Additional binding logic here, like handling senderId to differentiate messages
+
+        if(message.getSenderId().equals(currentUserId)){
+            // If the current user is the sender
+            holder.textMessageSender.setText(message.getText());
+            holder.textMessageSender.setVisibility(View.VISIBLE);
+            holder.textMessageReceiver.setVisibility(View.GONE);
+        } else {
+            // If the current user is the receiver
+            holder.textMessageReceiver.setText(message.getText());
+            holder.textMessageReceiver.setVisibility(View.VISIBLE);
+            holder.textMessageSender.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -38,11 +50,13 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     }
 
     public static class MessageViewHolder extends RecyclerView.ViewHolder {
-        TextView textMessage;
+        TextView textMessageSender;
+        TextView textMessageReceiver;
 
         public MessageViewHolder(View itemView) {
             super(itemView);
-            textMessage = itemView.findViewById(R.id.text_message);
+            textMessageSender = itemView.findViewById(R.id.text_message_sender);
+            textMessageReceiver = itemView.findViewById(R.id.text_message_receiver);
         }
     }
 }
