@@ -23,10 +23,14 @@
             android:layout_centerVertical="true"
             android:layout_marginStart="10dp"
             android:id="@+id/other_username"
+            android:background="@drawable/textview_background"
+            android:padding="8dp"
             android:shadowColor="#4D000000"
-            android:shadowDx="1"
-            android:shadowDy="1"
-            android:shadowRadius="2" />
+            android:shadowDx="2"
+            android:shadowDy="2"
+            android:shadowRadius="3"
+            android:elevation="4dp" />
+
 
     </RelativeLayout>
 
@@ -43,31 +47,51 @@
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:layout_alignParentBottom="true"
-        android:padding="8dp"
+        android:paddingLeft="8dp"
+        android:paddingTop="8dp"
+        android:paddingRight="8dp"
         android:id="@+id/bottom_layout">
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="60dp"
-        android:layout_toStartOf="@+id/message_send_btn"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="58dp"
-        android:elevation="4dp"
-        android:hint="Write message here"
-        android:padding="10dp"
+            android:layout_toStartOf="@+id/message_send_btn"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="58dp"
+            android:background="@drawable/message_input_background"
+            android:elevation="4dp"
+            android:hint="Write message here"
+            android:textColorHint="#FFAAAAAA"
+            android:padding="16dp"
             android:id="@+id/message_input"
+            android:textColor="#FF000000"
+            android:textSize="18sp"
+            android:inputType="textMultiLine"
+            android:gravity="center_vertical"
+            android:lineSpacingExtra="6dp"
+            android:scrollbars="vertical"
+            android:minHeight="60dp"
+            style="@style/Widget.AppCompat.EditText"
             />
+
+
 
         <ImageButton
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:src="@drawable/icon_send"
+            android:background="@drawable/button_background"
+            android:elevation="4dp"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:id="@+id/message_send_btn"
             android:contentDescription="Send Message"
-            android:layout_marginEnd="10dp" />
+            android:layout_marginEnd="10dp"
+            android:scaleType="centerInside"
+            android:padding="10dp"
+            />
+
 
     </RelativeLayout>
 </RelativeLayout>
