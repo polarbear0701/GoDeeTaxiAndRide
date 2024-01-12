@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -30,11 +31,15 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.maps.DirectionsApiRequest;
+import com.google.maps.DistanceMatrixApi;
 import com.google.maps.GeoApiContext;
 import com.google.maps.android.PolyUtil;
 import com.google.maps.model.DirectionsLeg;
 import com.google.maps.model.DirectionsResult;
 import com.google.maps.model.DirectionsStep;
+import com.google.maps.model.DistanceMatrix;
+import com.google.maps.model.TravelMode;
+import com.google.maps.model.Unit;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -54,11 +59,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         client = LocationServices.getFusedLocationProviderClient(MapsActivity.this);
 
         super.onCreate(savedInstanceState);
-
-        Button booking = findViewById(R.id.bookingBtn);
-
         com.example.godee.databinding.ActivityMapsBinding binding = com.example.godee.databinding.ActivityMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        Button confirmBooking = findViewById(R.id.btnConfirmBooking);
+        confirmBooking.setOnClickListener(v -> {
+            Toast.makeText(this, "Booking confirmed", Toast.LENGTH_SHORT).show();
+        });
 
         BottomNavigationView pageMenu = findViewById(R.id.page_navigation);
         pageMenu.setSelectedItemId(R.id.activity_home);
@@ -184,12 +191,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Use a directions API client to get route information
         // Primary key here: AIzaSyAHUvfBiUgU0zaKO2TxG4oYKLl5geXMiwc
         // Replace with this key when exceed daily limit:  AIzaSyA-qGgUm9sSW2Kg8QX47yPofhaiVp14tAs
+        // Extra key AIzaSyC_RqsNZ4qaLg2r3iY5_zMipflMarUrZus
+//        AIzaSyB8ycsYUrwFVKgsW3aQ8OYx51NPm8TktMc
         LinearLayout bookingUI = findViewById(R.id.bookingView);
         bookingUI.setVisibility(View.VISIBLE);
-        DirectionsApiRequest request = new DirectionsApiRequest(new GeoApiContext.Builder().apiKey("AIzaSyA-qGgUm9sSW2Kg8QX47yPofhaiVp14tAs").build());
+
+        String apiKey = "AIzaSyB8ycsYUrwFVKgsW3aQ8OYx51NPm8TktMc";
+        String second = "AIzaSyDOr1sNIfAdOHQ-BuktUDmIL4ySNjLdxL4";
+        GeoApiContext context = new GeoApiContext.Builder()
+                .apiKey(apiKey)
+                .build();
+        com.google.maps.model.LatLng convertedOrigin = new com.google.maps.model.LatLng(origin.latitude, origin.longitude); // San Francisco, CA
+        com.google.maps.model.LatLng convertedDestination = new com.google.maps.model.LatLng(destination.latitude, destination.longitude); // Los Angeles, CA
+        DirectionsApiRequest request = new DirectionsApiRequest(context);
         try {
-            DirectionsResult result = request.origin(new com.google.maps.model.LatLng(origin.latitude, origin.longitude))
-                    .destination(new com.google.maps.model.LatLng(destination.latitude, destination.longitude))
+            DirectionsResult result = request.origin(convertedOrigin)
+                    .destination(convertedDestination)
                     .await();
 
             // Draw the route on the map
@@ -200,13 +217,28 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
             }
             mMap.addPolyline(new PolylineOptions().addAll(path).color(Color.BLUE));
-//            LinearLayout bookingUI = findViewById(R.id.bookingView);
-//            bookingUI.setVisibility(View.VISIBLE);
         } catch (Exception e) {
             e.printStackTrace();
-            // Handle errors, such as network issues or no route found
+            Log.e("Error getting route", e.getMessage());
+        }
+
+        try{
+            DistanceMatrix distanceMatrix = DistanceMatrixApi.newRequest(context)
+                    .origins(convertedOrigin)
+                    .destinations(convertedDestination)
+                    .mode(TravelMode.DRIVING)
+                    .units(Unit.METRIC)
+                    .await();
+
+            // Access distance value in kilometers
+            long distanceInMeters = distanceMatrix.rows[0].elements[0].distance.inMeters;
+            double distanceInKilometers = distanceInMeters / 1000.0;
+            Toast.makeText(this, "Distance: " + distanceInKilometers + " km", Toast.LENGTH_SHORT).show();
+            Log.d("Distance", "Distance: " + distanceInKilometers + " km");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.e("Error getting distance", e.getMessage());
+            Toast.makeText(this, "Failed", Toast.LENGTH_SHORT).show();
         }
     }
-
-
 }
