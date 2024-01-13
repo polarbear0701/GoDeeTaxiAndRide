@@ -1,6 +1,8 @@
 package com.example.godee.Driver.Driver.ModelClass;
 
 
+import java.util.ArrayList;
+
 public class DriverModel {
     private String name;
     private String email;
@@ -10,6 +12,7 @@ public class DriverModel {
     private int accountType;
     private Double latitude, longitude;
     private Boolean inSession;
+    private ArrayList<DriveSession> driverAllSession = new ArrayList<>();
 
     public DriverModel() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
@@ -95,5 +98,13 @@ public class DriverModel {
 
     public void setInSession(Boolean inSession) {
         this.inSession = inSession;
+    }
+
+    public ArrayList<DriveSession> getDriverAllSession() {
+        return driverAllSession;
+    }
+
+    public void setDriverAllSession(ArrayList<DriveSession> driverAllSession) {
+        this.driverAllSession = driverAllSession;
     }
 }

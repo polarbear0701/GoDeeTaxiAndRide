@@ -19,6 +19,7 @@ import androidx.appcompat.widget.SearchView;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
+import com.example.godee.Driver.Driver.ModelClass.DriveSession;
 import com.example.godee.Driver.Driver.ModelClass.DriverModel;
 import com.example.godee.R;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -35,6 +36,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.maps.DirectionsApiRequest;
 import com.google.maps.DistanceMatrixApi;
@@ -58,7 +60,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private GoogleMap mMap;
     private LatLng userCurrentLocationInstance;
+    private LatLng userDestination;
     private FusedLocationProviderClient client;
+    private String destinationAddress;
     int price = 0;
 //    TextView priceView = findViewById(R.id.pricing);
 
@@ -94,9 +98,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             minDistance = distance;
                             driverId = task.getResult().getDocuments().get(i).getId();
                         }
-                        Log.d("Driver" + i, task.getResult().getDocuments().get(i).getId() + " " +distance);
+//                        Log.d("Driver" + i, task.getResult().getDocuments().get(i).getId() + " " +distance);
                     }
-                    Log.d("Min distance", String.valueOf(minDistance) + " " + driverId);
+//                    Log.d("Min distance", String.valueOf(minDistance) + " " + driverId);
+                    DriveSession newSession = new DriveSession(driverId, mAuth.getCurrentUser().getUid(), userCurrentLocationInstance.latitude, userCurrentLocationInstance.longitude, userDestination.latitude, userDestination.longitude, destinationAddress);
+//                    db.collection("sessions").document(newSession.getSessionID()).set(newSession);
+                    db.collection("drivers").document(driverId).update("driverAllSession", FieldValue.arrayUnion(newSession));
+                    db.collection("drivers").document(driverId).update(("inSession"), false);
                     DocumentReference driver = db.collection("drivers").document(driverId);
                     driver.update("currentGuest", mAuth.getCurrentUser().getUid());
                 }
@@ -117,6 +125,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public boolean onQueryTextSubmit(String query) {
                 String location = searchView.getQuery().toString();
+                destinationAddress = location;
                 List<Address> addressList = null;
                 Geocoder geocoder = new Geocoder(MapsActivity.this);
                 try {
@@ -132,6 +141,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 //                    mMap.clear();
                     Address address = addressList.get(0);
                     LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
+                    userDestination = latLng;
                     drawRoute(userCurrentLocationInstance, latLng);
                     mMap.addMarker(new MarkerOptions().position(latLng).title(location));
                     mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
