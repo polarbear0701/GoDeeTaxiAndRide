@@ -98,12 +98,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             minDistance = distance;
                             driverId = task.getResult().getDocuments().get(i).getId();
                         }
-                        Log.d("Driver" + i, task.getResult().getDocuments().get(i).getId() + " " +distance);
+//                        Log.d("Driver" + i, task.getResult().getDocuments().get(i).getId() + " " +distance);
                     }
-                    Log.d("Min distance", String.valueOf(minDistance) + " " + driverId);
+//                    Log.d("Min distance", String.valueOf(minDistance) + " " + driverId);
                     DriveSession newSession = new DriveSession(driverId, mAuth.getCurrentUser().getUid(), userCurrentLocationInstance.latitude, userCurrentLocationInstance.longitude, userDestination.latitude, userDestination.longitude, destinationAddress);
 //                    db.collection("sessions").document(newSession.getSessionID()).set(newSession);
                     db.collection("drivers").document(driverId).update("driverAllSession", FieldValue.arrayUnion(newSession));
+                    db.collection("drivers").document(driverId).update(("inSession"), false);
                     DocumentReference driver = db.collection("drivers").document(driverId);
                     driver.update("currentGuest", mAuth.getCurrentUser().getUid());
                 }
