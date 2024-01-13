@@ -24,6 +24,9 @@
             android:name=".Driver.Driver.DriverProfileActivity"
             android:exported="false" />
         <activity
+            android:name=".Driver.Driver.DriverHistoryActivity"
+            android:exported="false" />
+        <activity
             android:name=".ChatActivity"
             android:exported="false" />
         <!--

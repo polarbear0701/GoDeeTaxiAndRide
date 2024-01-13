@@ -9,12 +9,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.godee.Driver.Driver.ModelClass.DriverModel;
-import com.example.godee.User.LoginPageActivity;
-import com.example.godee.User.MapsActivity;
 import com.example.godee.R;
+import com.example.godee.User.LoginPageActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -38,7 +38,7 @@ public class DriverLoginActivity extends AppCompatActivity {
 
         if (driver != null) {
             driver.getTenantId();
-            Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
+            Intent intent = new Intent(getApplicationContext(), DriverMapsActivity.class);
             startActivity(intent);
             finish();
         }
@@ -66,14 +66,14 @@ public class DriverLoginActivity extends AppCompatActivity {
                     DocumentReference docRef = FirebaseFirestore.getInstance().collection("drivers").document(Objects.requireNonNull(auth.getCurrentUser()).getUid());
                     docRef.get().addOnSuccessListener(documentSnapshot -> {
                         DriverModel driverModelTemp = documentSnapshot.toObject(DriverModel.class);
-                        assert driverModelTemp != null;
+//                        assert driverModelTemp != null;
                         if (driverModelTemp.getAccountType() != 200){
-                            Toast.makeText(DriverLoginActivity.this, "You are a user, please login in driver page!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "You are a user, please login in driver page!", Toast.LENGTH_SHORT).show();
                             auth.signOut();
                         }
                         else{
                             Toast.makeText(DriverLoginActivity.this, "Welcome Driver!!", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(DriverLoginActivity.this, DriverMapsActivity.class);
+                            Intent intent = new Intent(getApplicationContext(), DriverMapsActivity.class);
                             startActivity(intent);
                             finish();
                         }
