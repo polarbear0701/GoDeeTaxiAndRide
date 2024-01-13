@@ -10,9 +10,11 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
+import com.example.godee.Driver.Driver.ModelClass.DriverModel;
 import com.example.godee.R;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
@@ -27,7 +29,10 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.util.Objects;
 
@@ -58,6 +63,7 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
         super.onCreate(savedInstanceState);
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
+        Log.d("Current Driver", "onCreate: " + user.getUid());
 
         com.example.godee.databinding.ActivityDriverMapsBinding binding = com.example.godee.databinding.ActivityDriverMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -66,7 +72,6 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
         BottomNavigationView driverPageMenu = findViewById(R.id.driver_page_navigation);
         driverPageMenu.setSelectedItemId(R.id.driver_activity_home);
         driverPageNavigation(driverPageMenu);
-
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -82,7 +87,7 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
 
         Button joinSessionBtn = findViewById(R.id.btn);
         joinSessionBtn.setOnClickListener(v -> checkSessionJoin = true);
-
+        notifyNewDrive();
     }
 
     // Function for page navigation (bottom navigation bar)
@@ -131,6 +136,33 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
         //set zoom control
         mMap.getUiSettings().setZoomControlsEnabled(true);
         mMap.setPadding(0, 0,0, 400);
+    }
+    private void notifyNewDrive(){
+        FirebaseFirestore newDrive = FirebaseFirestore.getInstance();
+        newDrive.collection("drivers").document(auth.getCurrentUser().getUid()).addSnapshotListener((value, error) -> {
+            if (error != null){
+                Log.e("DriverMapsActivity", "Listen failed", error);
+            }
+
+            if (value != null && value.exists()){
+                DriverModel driver = value.toObject(DriverModel.class);
+                assert driver != null;
+                int size = driver.getDriverAllSession().size();
+                Log.d("Successfully upload", "onSuccess: " + driver.getDriverAllSession().get(size - 1).getUserID());
+                Toast.makeText(DriverMapsActivity.this, driver.getDriverAllSession().get(size - 1).getUserID(), Toast.LENGTH_SHORT).show();
+            }
+            else{
+                Toast.makeText(DriverMapsActivity.this, "Driver is offline", Toast.LENGTH_SHORT).show();
+            }
+        });
+        newDrive.collection("drivers").document(auth.getCurrentUser().getUid()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                DriverModel driver = value.toObject(DriverModel.class);
+                int size = driver.getDriverAllSession().size();
+                Toast.makeText(DriverMapsActivity.this, driver.getDriverAllSession().get(size - 1).getUserID(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
     private void requestPermission(){
         ActivityCompat.requestPermissions(DriverMapsActivity.this,new String[]{
