@@ -149,7 +149,9 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
                 assert driver != null;
                 int size = driver.getDriverAllSession().size();
                 Log.d("Successfully upload", "onSuccess: " + driver.getDriverAllSession().get(size - 1).getUserID());
-                Toast.makeText(DriverMapsActivity.this, driver.getDriverAllSession().get(size - 1).getUserID(), Toast.LENGTH_SHORT).show();
+                if (size > 0) {
+                    Toast.makeText(DriverMapsActivity.this, driver.getDriverAllSession().get(size - 1).getUserID(), Toast.LENGTH_SHORT).show();
+                }
             }
             else{
                 Toast.makeText(DriverMapsActivity.this, "Driver is offline", Toast.LENGTH_SHORT).show();
