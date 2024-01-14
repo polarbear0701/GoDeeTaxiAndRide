@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -39,6 +40,7 @@ import java.util.Objects;
 public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
+    private TextView statusTextView;
     LatLng driverCurrentLocationInstance;
     FirebaseAuth auth;
     FirebaseUser user;
@@ -87,6 +89,7 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
 
         Button joinSessionBtn = findViewById(R.id.btn);
         joinSessionBtn.setOnClickListener(v -> checkSessionJoin = true);
+        statusTextView = findViewById(R.id.statusTextView);
         notifyNewDrive();
     }
 
