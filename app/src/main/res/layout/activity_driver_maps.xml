@@ -22,7 +22,7 @@
         android:layout_alignParentBottom="true">
 
         <LinearLayout
-            android:id="@+id/currentRide"
+            android:id="@+id/currentDriveBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_above="@+id/page_navigation"
@@ -32,7 +32,7 @@
             android:elevation="12dp"
             android:orientation="vertical"
             android:padding="16dp"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="match_parent"

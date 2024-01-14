@@ -44,6 +44,9 @@ public class ChatActivity extends AppCompatActivity {
     private MessageAdapter messageAdapter;
     private List<MessageModel> messageList;
     private static final String CHANNEL_ID = "chat_notifications";
+//    public ChatActivity(String otherUserID) {
+//        this.otherUserID = otherUserID;
+//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

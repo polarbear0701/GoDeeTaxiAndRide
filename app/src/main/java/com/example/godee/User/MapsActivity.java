@@ -100,9 +100,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         }
 //                        Log.d("Driver" + i, task.getResult().getDocuments().get(i).getId() + " " +distance);
                     }
-//                    Log.d("Min distance", String.valueOf(minDistance) + " " + driverId);
+                    Log.d("Min distance", String.valueOf(minDistance) + " " + driverId);
                     DriveSession newSession = new DriveSession(driverId, mAuth.getCurrentUser().getUid(), userCurrentLocationInstance.latitude, userCurrentLocationInstance.longitude, userDestination.latitude, userDestination.longitude, destinationAddress);
-//                    db.collection("sessions").document(newSession.getSessionID()).set(newSession);
                     db.collection("drivers").document(driverId).update("driverAllSession", FieldValue.arrayUnion(newSession));
                     db.collection("drivers").document(driverId).update(("inSession"), false);
                     DocumentReference driver = db.collection("drivers").document(driverId);
@@ -245,6 +244,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         bookingUI.setVisibility(View.VISIBLE);
 
         String apiKey = "AIzaSyB8ycsYUrwFVKgsW3aQ8OYx51NPm8TktMc";
+//        String apiKey = "AIzaSyA9P2E6g6pBNuKBfZyUbZrvdOqyt1gg6vo";
         String second = "AIzaSyDOr1sNIfAdOHQ-BuktUDmIL4ySNjLdxL4";
         GeoApiContext context = new GeoApiContext.Builder()
                 .apiKey(apiKey)

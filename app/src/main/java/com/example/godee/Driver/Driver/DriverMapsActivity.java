@@ -6,7 +6,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -139,24 +141,26 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
     }
     private void notifyNewDrive(){
         FirebaseFirestore newDrive = FirebaseFirestore.getInstance();
-        newDrive.collection("drivers").document(auth.getCurrentUser().getUid()).addSnapshotListener((value, error) -> {
-            if (error != null){
-                Log.e("DriverMapsActivity", "Listen failed", error);
-            }
-
-            if (value != null && value.exists()){
-                DriverModel driver = value.toObject(DriverModel.class);
-                assert driver != null;
-                int size = driver.getDriverAllSession().size();
-                Log.d("Successfully upload", "onSuccess: " + driver.getDriverAllSession().get(size - 1).getUserID());
-                if (size > 0) {
-                    Toast.makeText(DriverMapsActivity.this, driver.getDriverAllSession().get(size - 1).getUserID(), Toast.LENGTH_SHORT).show();
-                }
-            }
-            else{
-                Toast.makeText(DriverMapsActivity.this, "Driver is offline", Toast.LENGTH_SHORT).show();
-            }
-        });
+//        newDrive.collection("drivers").document(auth.getCurrentUser().getUid()).addSnapshotListener((value, error) -> {
+//            if (error != null){
+//                Log.e("DriverMapsActivity", "Listen failed", error);
+//            }
+//
+//            if (value != null && value.exists()){
+//                DriverModel driver = value.toObject(DriverModel.class);
+//                assert driver != null;
+//                int size = driver.getDriverAllSession().size();
+//                Log.d("Successfully upload", "onSuccess: " + driver.getDriverAllSession().get(size - 1).getUserID());
+//                if (size > 0) {
+//                    Toast.makeText(DriverMapsActivity.this, driver.getDriverAllSession().get(size - 1).getUserID(), Toast.LENGTH_SHORT).show();
+//                }
+//                LinearLayout driverConfirmDrive = findViewById(R.id.currentDriveBar);
+//                driverConfirmDrive.setVisibility(View.VISIBLE);
+//            }
+//            else{
+//                Toast.makeText(DriverMapsActivity.this, "Driver is offline", Toast.LENGTH_SHORT).show();
+//            }
+//        });
         newDrive.collection("drivers").document(auth.getCurrentUser().getUid()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
