@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,41 +49,45 @@ public class DriverLoginActivity extends AppCompatActivity {
         textView = findViewById(R.id.registerNow);
         TextView tvBackToUserLogin = findViewById(R.id.tvBackToUserLogin);
         Button driverLoginButton = findViewById(R.id.btn_login_driver);
+        ProgressBar progressBar = findViewById(R.id.progressBar);
 
         EditText emailSignIn = findViewById(R.id.emailSignIn);
         EditText passwordSignIn = findViewById(R.id.passwordSignIn);
 
         driverLoginButton.setOnClickListener(v -> {
-            String emailText = String.valueOf(emailSignIn.getText());
-            String passwordText = String.valueOf(passwordSignIn.getText());
+            String emailText = emailSignIn.getText().toString();
+            String passwordText = passwordSignIn.getText().toString();
             hideKeyboard(v);
 
-            if ((emailText.isEmpty()) || (passwordText.isEmpty())) {
+            if (emailText.isEmpty() || passwordText.isEmpty()) {
                 Toast.makeText(DriverLoginActivity.this, "Please fill in all the fields!", Toast.LENGTH_SHORT).show();
-//                return;
+                return;
             }
+
+            // ProgressBar
+            progressBar.setVisibility(View.VISIBLE);
+
             auth.signInWithEmailAndPassword(emailText, passwordText).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     DocumentReference docRef = FirebaseFirestore.getInstance().collection("drivers").document(Objects.requireNonNull(auth.getCurrentUser()).getUid());
                     docRef.get().addOnSuccessListener(documentSnapshot -> {
                         DriverModel driverModelTemp = documentSnapshot.toObject(DriverModel.class);
-//                        assert driverModelTemp != null;
                         if (driverModelTemp.getAccountType() != 200){
-                            Toast.makeText(getApplicationContext(), "You are a user, please login in driver page!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "You are a user, please login in user page!", Toast.LENGTH_SHORT).show();
                             auth.signOut();
-                        }
-                        else{
+                        } else {
                             Toast.makeText(DriverLoginActivity.this, "Welcome Driver!!", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(getApplicationContext(), DriverMapsActivity.class);
                             startActivity(intent);
                             finish();
                         }
+                        progressBar.setVisibility(View.GONE);
                     });
                 } else {
                     Toast.makeText(DriverLoginActivity.this, "Login Failed!", Toast.LENGTH_SHORT).show();
+                    progressBar.setVisibility(View.GONE);
                 }
             });
-
         });
 
         tvBackToUserLogin.setOnClickListener(view -> {
