@@ -72,6 +72,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Edit"
+                    android:textColor="@color/not_white"
                     android:textAlignment="center"
                     android:backgroundTint="@color/vermilion"
                     android:textSize="18sp" />
@@ -106,6 +107,7 @@
                     android:layout_height="wrap_content"
                     android:backgroundTint="@color/vermilion"
                     android:text="edit"
+                    android:textColor="@color/not_white"
                     android:textAlignment="center"
                     android:textSize="18sp" />
             </LinearLayout>
@@ -120,6 +122,7 @@
             android:backgroundTint="@color/vermilion"
             android:gravity="center"
             android:text="Log Out"
+            android:textColor="@color/not_white"
             android:textSize="16sp" />
 
         <Button
@@ -129,6 +132,7 @@
             android:layout_centerInParent="true"
             android:layout_gravity="center"
             android:backgroundTint="@color/vermilion"
+            android:textColor="@color/not_white"
             android:text="Go to Chat" />
 
 

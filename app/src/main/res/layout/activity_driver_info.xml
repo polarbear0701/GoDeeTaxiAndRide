@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".User.UserInfoActivity">
+    tools:context=".Driver.Driver.DriverInfoActivity">
 
     <Button
         android:layout_width="wrap_content"
@@ -13,7 +13,8 @@
         android:backgroundTint="@color/vermilion"
         android:text="Back"
         android:textColor="@color/not_white"
-        android:id="@+id/info_backBtn"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"/>
+        android:layout_centerHorizontal="true"
+        android:id="@+id/driver_info_backBtn"/>
+
 </RelativeLayout>

@@ -27,7 +27,25 @@ public class DriverProfileActivity extends AppCompatActivity {
         driverPageMenu.setSelectedItemId(R.id.driver_activity_profile);
         driverPageNavigation(driverPageMenu);
 
+        Button driver_info = findViewById(R.id.profile_driver_edit);
+        Button driver_setting = findViewById(R.id.profile_driver_setting_edit);
 
+
+        driver_info.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), DriverInfoActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        driver_setting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), DriverSettingActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
 
