@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -15,8 +16,10 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
+import com.example.godee.ChatActivity;
 import com.example.godee.Driver.Driver.ModelClass.DriverModel;
 import com.example.godee.R;
+import com.example.godee.User.ProfileActivity;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
@@ -91,6 +94,16 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
         joinSessionBtn.setOnClickListener(v -> checkSessionJoin = true);
         statusTextView = findViewById(R.id.statusTextView);
         notifyNewDrive();
+
+        Button driverChatButton = findViewById(R.id.message_btn);
+        driverChatButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(DriverMapsActivity.this, ChatActivity.class);
+                intent.putExtra("CURRENT_USER_ID", user.getUid());
+                startActivity(intent);
+            }
+        });
     }
 
     // Function for page navigation (bottom navigation bar)

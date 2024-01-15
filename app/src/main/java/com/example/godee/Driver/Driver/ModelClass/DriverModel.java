@@ -13,6 +13,8 @@ public class DriverModel {
     private Double latitude, longitude;
     private Boolean inSession;
     private ArrayList<DriveSession> driverAllSession = new ArrayList<>();
+    private String currentUser;
+    private int rating;
 
     public DriverModel() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
@@ -106,5 +108,21 @@ public class DriverModel {
 
     public void setDriverAllSession(ArrayList<DriveSession> driverAllSession) {
         this.driverAllSession = driverAllSession;
+    }
+
+    public String getCurrentUser() {
+        return currentUser;
+    }
+
+    public void setCurrentUser(String currentUser) {
+        this.currentUser = currentUser;
+    }
+
+    public int getRating() {
+        return rating;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
     }
 }

@@ -9,6 +9,8 @@ public class UserModel {
     private userAddress useraddress;
     private int accountType;
     private Double latitude, longitude;
+    private String currentDriver;
+    private int rating;
 
     public UserModel() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
@@ -102,6 +104,22 @@ public class UserModel {
 
     public void setAccountType(int accountType) {
         this.accountType = accountType;
+    }
+
+    public String getCurrentDriver() {
+        return currentDriver;
+    }
+
+    public void setCurrentDriver(String currentDriver) {
+        this.currentDriver = currentDriver;
+    }
+
+    public int getRating() {
+        return rating;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
     }
 }
 
