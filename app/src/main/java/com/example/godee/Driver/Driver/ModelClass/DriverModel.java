@@ -7,6 +7,8 @@ public class DriverModel {
     private String name;
     private String email;
     private String phoneNumber;
+    private String currentUserID;
+    private int rating;
     private int age;
     private String nationality;
     private int accountType;
@@ -21,8 +23,10 @@ public class DriverModel {
     public DriverModel(String name, String email, String phoneNumber, int age, String nationality, int accountType) {
         this.name = name;
         this.email = email;
+        this.currentUserID = "";
         this.phoneNumber = phoneNumber;
         this.age = age;
+        this.rating = 5;
         this.nationality = nationality;
         this.accountType = accountType;
         this.inSession = false;
@@ -106,5 +110,21 @@ public class DriverModel {
 
     public void setDriverAllSession(ArrayList<DriveSession> driverAllSession) {
         this.driverAllSession = driverAllSession;
+    }
+
+    public String getCurrentUserID() {
+        return currentUserID;
+    }
+
+    public void setCurrentUserID(String currentUserID) {
+        this.currentUserID = currentUserID;
+    }
+
+    public int getRating() {
+        return rating;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
     }
 }
