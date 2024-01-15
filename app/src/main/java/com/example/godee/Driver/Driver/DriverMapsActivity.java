@@ -42,8 +42,7 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
     private GoogleMap mMap;
     private TextView statusTextView;
     LatLng driverCurrentLocationInstance;
-    FirebaseAuth auth;
-    FirebaseUser user;
+    FirebaseAuth auth = FirebaseAuth.getInstance();
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     FusedLocationProviderClient client;
     Handler handler;
@@ -51,11 +50,6 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
     Runnable runnable;
     private Boolean checkSessionJoin = false;
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        auth.signOut();
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,9 +57,7 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
         client = LocationServices.getFusedLocationProviderClient(DriverMapsActivity.this);
 
         super.onCreate(savedInstanceState);
-        auth = FirebaseAuth.getInstance();
-        user = auth.getCurrentUser();
-        Log.d("Current Driver", "onCreate: " + user.getUid());
+
 
         com.example.godee.databinding.ActivityDriverMapsBinding binding = com.example.godee.databinding.ActivityDriverMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -142,30 +134,16 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
     }
     private void notifyNewDrive(){
         FirebaseFirestore newDrive = FirebaseFirestore.getInstance();
-        newDrive.collection("drivers").document(auth.getCurrentUser().getUid()).addSnapshotListener((value, error) -> {
-            if (error != null){
-                Log.e("DriverMapsActivity", "Listen failed", error);
-            }
-
-            if (value != null && value.exists()){
+        newDrive.collection("drivers").document(Objects.requireNonNull(auth.getCurrentUser()).getUid()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                assert value != null;
                 DriverModel driver = value.toObject(DriverModel.class);
                 assert driver != null;
                 int size = driver.getDriverAllSession().size();
-                Log.d("Successfully upload", "onSuccess: " + driver.getDriverAllSession().get(size - 1).getUserID());
                 if (size > 0) {
                     Toast.makeText(DriverMapsActivity.this, driver.getDriverAllSession().get(size - 1).getUserID(), Toast.LENGTH_SHORT).show();
                 }
-            }
-            else{
-                Toast.makeText(DriverMapsActivity.this, "Driver is offline", Toast.LENGTH_SHORT).show();
-            }
-        });
-        newDrive.collection("drivers").document(auth.getCurrentUser().getUid()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                DriverModel driver = value.toObject(DriverModel.class);
-                int size = driver.getDriverAllSession().size();
-                Toast.makeText(DriverMapsActivity.this, driver.getDriverAllSession().get(size - 1).getUserID(), Toast.LENGTH_SHORT).show();
             }
         });
     }
