@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,6 +6,15 @@
     tools:context=".User.HistoryPageActivity"
     android:orientation="vertical">
 
+    <!-- RecyclerView at the top -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/historyRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/profile_navigation_bar"
+        android:layout_marginTop="10dp"/>
+
+    <!-- Bottom Navigation Bar -->
     <LinearLayout
         android:id="@+id/profile_navigation_bar"
         android:layout_width="match_parent"
@@ -23,7 +30,5 @@
             android:layout_marginHorizontal="10dp"
             android:layout_marginBottom="10dp"
             android:background="@drawable/page_navigation_outline" />
-
     </LinearLayout>
-
 </RelativeLayout>
