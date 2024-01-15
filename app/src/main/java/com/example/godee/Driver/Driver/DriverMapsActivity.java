@@ -9,6 +9,7 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -32,15 +33,20 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.WriteBatch;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private TextView statusTextView;
+    private ToggleButton toggleOnlineOffline;
     LatLng driverCurrentLocationInstance;
     FirebaseAuth auth;
     FirebaseUser user;
@@ -70,6 +76,8 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
         com.example.godee.databinding.ActivityDriverMapsBinding binding = com.example.godee.databinding.ActivityDriverMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+
+
         // Initiate content for page navigation bar
         BottomNavigationView driverPageMenu = findViewById(R.id.driver_page_navigation);
         driverPageMenu.setSelectedItemId(R.id.driver_activity_home);
@@ -87,9 +95,26 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
 
         }, refresh);
 
-        Button joinSessionBtn = findViewById(R.id.btn);
-        joinSessionBtn.setOnClickListener(v -> checkSessionJoin = true);
+//        Button joinSessionBtn = findViewById(R.id.btn);
+//        joinSessionBtn.setOnClickListener(v -> checkSessionJoin = true);
+//        statusTextView = findViewById(R.id.statusTextView);
+//        notifyNewDrive();
+
+        toggleOnlineOffline = findViewById(R.id.btn);
         statusTextView = findViewById(R.id.statusTextView);
+
+        toggleOnlineOffline.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            toggleOnlineOffline.setEnabled(false);
+
+            if (isChecked) {
+                // The driver is online
+                goOnline();
+            } else {
+                // The driver is offline
+                goOffline();
+            }
+        });
+
         notifyNewDrive();
     }
 
@@ -151,7 +176,7 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
                 DriverModel driver = value.toObject(DriverModel.class);
                 assert driver != null;
                 int size = driver.getDriverAllSession().size();
-                Log.d("Successfully upload", "onSuccess: " + driver.getDriverAllSession().get(size - 1).getUserID());
+//                Log.d("Successfully upload", "onSuccess: " + driver.getDriverAllSession().get(size - 1).getUserID());
                 if (size > 0) {
                     Toast.makeText(DriverMapsActivity.this, driver.getDriverAllSession().get(size - 1).getUserID(), Toast.LENGTH_SHORT).show();
                 }
@@ -160,14 +185,14 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
                 Toast.makeText(DriverMapsActivity.this, "Driver is offline", Toast.LENGTH_SHORT).show();
             }
         });
-        newDrive.collection("drivers").document(auth.getCurrentUser().getUid()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                DriverModel driver = value.toObject(DriverModel.class);
-                int size = driver.getDriverAllSession().size();
-                Toast.makeText(DriverMapsActivity.this, driver.getDriverAllSession().get(size - 1).getUserID(), Toast.LENGTH_SHORT).show();
-            }
-        });
+//        newDrive.collection("drivers").document(auth.getCurrentUser().getUid()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+//            @Override
+//            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+//                DriverModel driver = value.toObject(DriverModel.class);
+////                int size = driver.getDriverAllSession().size();
+//                Toast.makeText(DriverMapsActivity.this, driver.getDriverAllSession().get(size - 1).getUserID(), Toast.LENGTH_SHORT).show();
+//            }
+//        });
     }
     private void requestPermission(){
         ActivityCompat.requestPermissions(DriverMapsActivity.this,new String[]{
@@ -207,4 +232,14 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
             }
         });
     }
+
+    private void goOnline() {
+        checkSessionJoin = true;
+        joinSession();
+    }
+
+    private void goOffline() {
+        checkSessionJoin = true;
+    }
+
 }
