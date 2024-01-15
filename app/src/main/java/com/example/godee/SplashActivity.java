@@ -17,6 +17,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Objects;
 
+import java.util.Objects;
+
 public class SplashActivity extends AppCompatActivity {
     private FirebaseAuth auth;
     private FirebaseFirestore db;
@@ -30,6 +32,7 @@ public class SplashActivity extends AppCompatActivity {
         ImageView imageView = findViewById(R.id.imageView);
         Animation fadeIn = AnimationUtils.loadAnimation(this, R.anim.fade_in);
         imageView.startAnimation(fadeIn);
+        Objects.requireNonNull(getSupportActionBar()).hide();
 
         int SPLASH_DISPLAY_LENGTH = 2000;
         new Handler().postDelayed(() -> {
