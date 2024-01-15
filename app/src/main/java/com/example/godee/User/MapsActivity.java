@@ -2,7 +2,9 @@ package com.example.godee.User;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
@@ -15,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
@@ -30,6 +33,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -54,21 +58,20 @@ import org.w3c.dom.Text;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback{
 //    private static final int LOCATION_PERMISSION = 99;
-
     private GoogleMap mMap;
+    private SharedPreferences sharedPreferences;
     private LatLng userCurrentLocationInstance;
     private LatLng userDestination;
     private FusedLocationProviderClient client;
     private String destinationAddress;
+    private boolean nightMode;
     int price = 0;
 //    TextView priceView = findViewById(R.id.pricing);
-
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         requestPermission();
@@ -77,9 +80,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         com.example.godee.databinding.ActivityMapsBinding binding = com.example.godee.databinding.ActivityMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
         Button confirmBooking = findViewById(R.id.btnConfirmBooking);
-
         confirmBooking.setOnClickListener(v -> {
             Toast.makeText(this, "Booking confirmed", Toast.LENGTH_SHORT).show();
             CollectionReference onlineDriver = db.collection("drivers");
@@ -88,7 +89,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     double minDistance = 500;
                     String driverId = "";
                     FirebaseAuth mAuth = FirebaseAuth.getInstance();
-
                     for (int i = 0; i < task.getResult().size(); i++) {
                         DriverModel temp = task.getResult().getDocuments().get(i).toObject(DriverModel.class);
                         assert temp != null;
@@ -150,7 +150,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
                 return false;
             }
-
             @Override
             public boolean onQueryTextChange(String newText) {
                 return false;
@@ -172,6 +171,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
         getUserCurrentPosition();
+
+        sharedPreferences = getSharedPreferences("MODE", Context.MODE_PRIVATE);
+
+        nightMode = sharedPreferences.getBoolean("nightMode", false);
+        if (nightMode){
+            mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.style));
+        }
+
         //set padding for zoom control
         mMap.getUiSettings().setZoomControlsEnabled(true);
         mMap.setPadding(0, 0,0, 400);

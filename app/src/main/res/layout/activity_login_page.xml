@@ -13,9 +13,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="GoDee"
-        android:textSize="40sp"
+        android:textSize="50sp"
         android:textStyle="bold"
-        android:textColor="#FFFFFF"
+        android:textColor="@color/white"
         android:shadowColor="#66000000"
         android:shadowDx="1"
         android:shadowDy="1"
@@ -85,7 +85,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:textColor="@android:color/white"
-        android:backgroundTint="#70006ca5"
         />
 
     <TextView

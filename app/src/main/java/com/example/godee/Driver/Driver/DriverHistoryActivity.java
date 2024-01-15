@@ -26,9 +26,9 @@ public class DriverHistoryActivity extends AppCompatActivity {
         driverPageMenu.setOnItemSelectedListener(item ->
         {   int itemId = item.getItemId();
             if (itemId == R.id.driver_activity_home){
-                // Start new activity base on the item selected on the navigation bar
-                // If the current tab is equal to the selected item only need to set this if-statement to return true
-                return true;
+                Intent intent = new Intent(getApplicationContext(), DriverMapsActivity.class);
+                startActivity(intent);
+                finish();
             }
             if (itemId == R.id.driver_activity_profile){
                 Intent intent = new Intent(getApplicationContext(), DriverProfileActivity.class);
@@ -36,9 +36,7 @@ public class DriverHistoryActivity extends AppCompatActivity {
                 finish();
             }
             if (itemId == R.id.driver_activity_history){
-                Intent intent = new Intent(getApplicationContext(), DriverHistoryActivity.class);
-                startActivity(intent);
-                finish();
+                return true;
             }
             // This part is expandable base on the number of tab need for the application
             /* Structure
