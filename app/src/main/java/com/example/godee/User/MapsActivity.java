@@ -11,7 +11,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -75,7 +74,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         requestPermission();
         client = LocationServices.getFusedLocationProviderClient(MapsActivity.this);
 
-        ProgressBar progressBar = findViewById(R.id.progressBar);
         super.onCreate(savedInstanceState);
         com.example.godee.databinding.ActivityMapsBinding binding = com.example.godee.databinding.ActivityMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -130,13 +128,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 destinationAddress = location;
                 List<Address> addressList = null;
                 Geocoder geocoder = new Geocoder(MapsActivity.this);
-                progressBar.setVisibility(View.VISIBLE);
                 try {
                     addressList = geocoder.getFromLocationName(location, 1);
-                    progressBar.setVisibility(View.GONE);
                 } catch (IOException e) {
                     e.printStackTrace();
-                    progressBar.setVisibility(View.GONE);
                 }
                 assert addressList != null;
                 if (addressList.size() == 0) {
