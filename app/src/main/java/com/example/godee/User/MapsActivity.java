@@ -78,6 +78,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         client = LocationServices.getFusedLocationProviderClient(MapsActivity.this);
 
         super.onCreate(savedInstanceState);
+        sharedPreferences = getSharedPreferences("MODE", Context.MODE_PRIVATE);
+
+        nightMode = sharedPreferences.getBoolean("nightMode", false);
+
         com.example.godee.databinding.ActivityMapsBinding binding = com.example.godee.databinding.ActivityMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         Button confirmBooking = findViewById(R.id.btnConfirmBooking);
@@ -171,12 +175,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
         getUserCurrentPosition();
-
-        sharedPreferences = getSharedPreferences("MODE", Context.MODE_PRIVATE);
-
-        nightMode = sharedPreferences.getBoolean("nightMode", false);
         if (nightMode){
             mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.style));
+
         }
 
         //set padding for zoom control

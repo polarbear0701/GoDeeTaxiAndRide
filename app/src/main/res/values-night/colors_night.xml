@@ -6,15 +6,17 @@
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
-    <color name="white">#2D3250</color>
+    <color name="white">#EEF5FF</color>
+    <color name="not_white">#2D3250</color>
     <color name="light_blue">#176B87</color>
     <color name="purple">#8692f7</color>
     <color name="grey">#808080</color>
     <color name="light_teal">#81CAD6</color>
-    <color name="vermilion">#EDCD44</color>
+    <color name="vermilion">#2E8A99</color>
     <color name="orange">#DC3E26</color>
     <color name="button_color">#FF6200EE</color>
     <color name="senderMessageBackground">#0084ff</color>
     <color name="receiverMessageBackground">#f1f1f1</color>
     <color name="textColor">#DDE6ED</color>
+    <color name="searchBar">@android:color/background_light</color>
 </resources>

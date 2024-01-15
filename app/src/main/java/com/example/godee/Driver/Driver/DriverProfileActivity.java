@@ -27,17 +27,7 @@ public class DriverProfileActivity extends AppCompatActivity {
         driverPageMenu.setSelectedItemId(R.id.driver_activity_profile);
         driverPageNavigation(driverPageMenu);
 
-        Button btnLogout = findViewById(R.id.btn_logout_driver);
 
-        btnLogout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                auth.signOut();
-                Intent backtoLogin = new Intent(getApplicationContext(), DriverLoginActivity.class);
-                startActivity(backtoLogin);
-                finish();
-            }
-        });
     }
 
 

@@ -72,8 +72,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Edit"
+                    android:textColor="@color/not_white"
                     android:textAlignment="center"
-                    android:backgroundTint="@color/light_blue"
+                    android:backgroundTint="@color/vermilion"
                     android:textSize="18sp" />
             </LinearLayout>
 
@@ -104,8 +105,9 @@
                     android:id="@+id/profile_setting_edit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:backgroundTint="@color/light_blue"
+                    android:backgroundTint="@color/vermilion"
                     android:text="edit"
+                    android:textColor="@color/not_white"
                     android:textAlignment="center"
                     android:textSize="18sp" />
             </LinearLayout>
@@ -117,8 +119,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="5dp"
-            android:backgroundTint="@color/light_blue"
+            android:backgroundTint="@color/vermilion"
             android:gravity="center"
+            android:textColor="@color/not_white"
             android:text="Log Out"
             android:textSize="16sp" />
 
@@ -128,8 +131,9 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:layout_gravity="center"
-            android:backgroundTint="@color/light_blue"
-            android:text="Go to Chat" />
+            android:backgroundTint="@color/vermilion"
+            android:text="Go to Chat"
+            android:textColor="@color/not_white"/>
 
 
     </LinearLayout>
