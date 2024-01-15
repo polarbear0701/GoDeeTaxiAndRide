@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
@@ -65,25 +66,23 @@ public class LoginPageActivity extends AppCompatActivity {
         });
 
         loginButton.setOnClickListener(v -> {
-            String email;
-            String password;
+            String email = emailSignIn.getText().toString();
+            String password = passwordSignIn.getText().toString();
+
             hideKeyboard(v);
 
-
-            email = String.valueOf(emailSignIn.getText());
-            password = String.valueOf(passwordSignIn.getText());
-
             if (email.isEmpty() || password.isEmpty()){
-                //Toast empty
                 Toast.makeText(LoginPageActivity.this, "Please fill in all the fields!", Toast.LENGTH_SHORT).show();
                 return;
             }
 
+            // Show the ProgressBar
+            ProgressBar progressBar = findViewById(R.id.progressBar);
+            progressBar.setVisibility(View.VISIBLE);
 
             FirebaseFirestore db = FirebaseFirestore.getInstance();
             mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
                 if (task.isSuccessful()){
-
                     DocumentReference documentReference = db.collection("users").document(Objects.requireNonNull(mAuth.getUid()));
                     documentReference.get().addOnSuccessListener(documentSnapshot -> {
                         UserModel modelTemp = documentSnapshot.toObject(UserModel.class);
@@ -98,11 +97,14 @@ public class LoginPageActivity extends AppCompatActivity {
                             startActivity(toHomePage);
                             finish();
                         }
+                        // Hide the ProgressBar after successful login
+                        progressBar.setVisibility(View.GONE);
                     });
-
                 }
                 else{
                     Toast.makeText(LoginPageActivity.this, "Login failed!", Toast.LENGTH_SHORT).show();
+                    // Hide the ProgressBar on login failure
+                    progressBar.setVisibility(View.GONE);
                 }
             });
         });
