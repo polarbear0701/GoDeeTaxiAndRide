@@ -7,14 +7,15 @@ public class DriverModel {
     private String name;
     private String email;
     private String phoneNumber;
+    private String currentUserID;
+    private int rating;
     private int age;
     private String nationality;
     private int accountType;
     private Double latitude, longitude;
     private Boolean inSession;
     private ArrayList<DriveSession> driverAllSession = new ArrayList<>();
-    private String currentUser;
-    private int rating;
+
 
     public DriverModel() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
@@ -23,8 +24,10 @@ public class DriverModel {
     public DriverModel(String name, String email, String phoneNumber, int age, String nationality, int accountType) {
         this.name = name;
         this.email = email;
+        this.currentUserID = "";
         this.phoneNumber = phoneNumber;
         this.age = age;
+        this.rating = 5;
         this.nationality = nationality;
         this.accountType = accountType;
         this.inSession = false;
@@ -110,12 +113,12 @@ public class DriverModel {
         this.driverAllSession = driverAllSession;
     }
 
-    public String getCurrentUser() {
-        return currentUser;
+    public String getCurrentUserID() {
+        return currentUserID;
     }
 
-    public void setCurrentUser(String currentUser) {
-        this.currentUser = currentUser;
+    public void setCurrentUserID(String currentUserID) {
+        this.currentUserID = currentUserID;
     }
 
     public int getRating() {

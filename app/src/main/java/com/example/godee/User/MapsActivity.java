@@ -17,7 +17,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
@@ -34,6 +33,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -53,22 +53,23 @@ import com.google.maps.model.DistanceMatrix;
 import com.google.maps.model.TravelMode;
 import com.google.maps.model.Unit;
 
-import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.Objects;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback{
 //    private static final int LOCATION_PERMISSION = 99;
     private GoogleMap mMap;
+    private boolean nightMode;
     private SharedPreferences sharedPreferences;
+    private Marker UserMarker;
     private LatLng userCurrentLocationInstance;
+    FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     private LatLng userDestination;
     private FusedLocationProviderClient client;
     private String destinationAddress;
-    private boolean nightMode;
     int price = 0;
 //    TextView priceView = findViewById(R.id.pricing);
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -105,11 +106,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 //                        Log.d("Driver" + i, task.getResult().getDocuments().get(i).getId() + " " +distance);
                     }
 //                    Log.d("Min distance", String.valueOf(minDistance) + " " + driverId);
-                    DriveSession newSession = new DriveSession(driverId, mAuth.getCurrentUser().getUid(), userCurrentLocationInstance.latitude, userCurrentLocationInstance.longitude, userDestination.latitude, userDestination.longitude, destinationAddress);
+                    DriveSession newSession = new DriveSession(driverId, Objects.requireNonNull(mAuth.getCurrentUser()).getUid(), userCurrentLocationInstance.latitude, userCurrentLocationInstance.longitude, userDestination.latitude, userDestination.longitude, destinationAddress);
 //                    db.collection("sessions").document(newSession.getSessionID()).set(newSession);
-                    db.collection("drivers").document(driverId).update("driverAllSession", FieldValue.arrayUnion(newSession));
-                    db.collection("drivers").document(driverId).update(("inSession"), false);
-                    DocumentReference driver = db.collection("drivers").document(driverId);
+                    db.collection("drivers").document("vSa5DIFPfFYL5ylal4E9Xp3Df273").update("driverAllSession", FieldValue.arrayUnion(newSession));
+                    db.collection("drivers").document("vSa5DIFPfFYL5ylal4E9Xp3Df273").update(("inSession"), false);
+                    DocumentReference driver = db.collection("drivers").document("vSa5DIFPfFYL5ylal4E9Xp3Df273");
                     driver.update("currentGuest", mAuth.getCurrentUser().getUid());
                 }
             });
@@ -160,17 +161,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
 
         });
+        Toast.makeText(this, firebaseAuth.getUid(), Toast.LENGTH_SHORT).show();
     }
 
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
@@ -180,15 +173,26 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         }
 
+
+        db.collection("drivers")
+                .whereEqualTo("inSession", true)
+                .get().addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        ArrayList<Marker> onlineDriverMarkers = new ArrayList<>();
+                        for (int i = 0; i < task.getResult().size(); i++) {
+                            DriverModel temp = task.getResult().getDocuments().get(i).toObject(DriverModel.class);
+                            assert temp != null;
+                            LatLng driverLocation = new LatLng(temp.getLatitude(), temp.getLongitude());
+                            Marker driverMarker = mMap.addMarker(new MarkerOptions().position(driverLocation).title("Driver " + i));
+                            onlineDriverMarkers.add(driverMarker);
+                        }
+                        Log.d("online drivers", onlineDriverMarkers.toString());
+                    }
+                });
+
         //set padding for zoom control
         mMap.getUiSettings().setZoomControlsEnabled(true);
         mMap.setPadding(0, 0,0, 400);
-
-
-        // Add a marker in Sydney and move the camera
-//        LatLng sydney = new LatLng(-31,151);
-//        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-//        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
     }
 
     //get permission for location
@@ -206,9 +210,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         client.getCurrentLocation(LocationRequest.PRIORITY_HIGH_ACCURACY, null).addOnSuccessListener(location -> {
             LatLng userCurrentLocation = new LatLng(location.getLatitude(), location.getLongitude());
             userCurrentLocationInstance = userCurrentLocation;
-            mMap.addMarker(new MarkerOptions().position(userCurrentLocation).title("Your location"));
+            UserMarker = mMap.addMarker(new MarkerOptions().position(userCurrentLocation).title("Your location"));
             mMap.moveCamera(CameraUpdateFactory.newLatLng(userCurrentLocation));
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userCurrentLocation, 13));
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userCurrentLocation, 14));
         });
     }
 
