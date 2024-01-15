@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -35,15 +36,20 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.WriteBatch;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private TextView statusTextView;
+    private ToggleButton toggleOnlineOffline;
     LatLng driverCurrentLocationInstance;
     FirebaseAuth auth = FirebaseAuth.getInstance();
     FirebaseUser user;
@@ -66,6 +72,8 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
         com.example.godee.databinding.ActivityDriverMapsBinding binding = com.example.godee.databinding.ActivityDriverMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+
+
         // Initiate content for page navigation bar
         BottomNavigationView driverPageMenu = findViewById(R.id.driver_page_navigation);
         driverPageMenu.setSelectedItemId(R.id.driver_activity_home);
@@ -85,7 +93,21 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
 
         Button joinSessionBtn = findViewById(R.id.btn);
         joinSessionBtn.setOnClickListener(v -> checkSessionJoin = true);
+        toggleOnlineOffline = findViewById(R.id.btn);
         statusTextView = findViewById(R.id.statusTextView);
+
+        toggleOnlineOffline.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            toggleOnlineOffline.setEnabled(false);
+
+            if (isChecked) {
+                // The driver is online
+                goOnline();
+            } else {
+                // The driver is offline
+                goOffline();
+            }
+        });
+
         notifyNewDrive();
 
         Button driverChatButton = findViewById(R.id.message_btn);
@@ -199,4 +221,14 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
             }
         });
     }
+
+    private void goOnline() {
+        checkSessionJoin = true;
+        joinSession();
+    }
+
+    private void goOffline() {
+        checkSessionJoin = true;
+    }
+
 }
