@@ -33,12 +33,12 @@ public class LoginPageActivity extends AppCompatActivity {
 
         user = mAuth.getCurrentUser();
 
-        if (user != null) {
-            user.getTenantId();
-            Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
-            startActivity(intent);
-            finish();
-        }
+//        if (user != null) {
+//            user.getTenantId();
+//            Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
+//            startActivity(intent);
+//            finish();
+//        }
 
         TextView textView;
         Button loginButton;
@@ -84,18 +84,34 @@ public class LoginPageActivity extends AppCompatActivity {
             mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
                 if (task.isSuccessful()){
                     DocumentReference documentReference = db.collection("users").document(Objects.requireNonNull(mAuth.getUid()));
-                    documentReference.get().addOnSuccessListener(documentSnapshot -> {
-                        UserModel modelTemp = documentSnapshot.toObject(UserModel.class);
-                        assert modelTemp != null;
-                        if (modelTemp.getAccountType() != 100){
-                            Toast.makeText(LoginPageActivity.this, "You are a driver, please login in driver page!", Toast.LENGTH_SHORT).show();
-                            mAuth.signOut();
-                        }
-                        else{
-                            Toast.makeText(LoginPageActivity.this, "Login successfully!", Toast.LENGTH_SHORT).show();
-                            Intent toHomePage = new Intent(LoginPageActivity.this, MapsActivity.class);
-                            startActivity(toHomePage);
-                            finish();
+//                    documentReference.get().addOnSuccessListener(documentSnapshot -> {
+//                        UserModel modelTemp = documentSnapshot.toObject(UserModel.class);
+//                        assert modelTemp != null;
+//                        if (modelTemp.getAccountType() != 100){
+//                            Toast.makeText(LoginPageActivity.this, "You are a driver, please login in driver page!", Toast.LENGTH_SHORT).show();
+//                            mAuth.signOut();
+//                        }
+//                        else{
+//                            Toast.makeText(LoginPageActivity.this, "Login successfully!", Toast.LENGTH_SHORT).show();
+//                            Intent toHomePage = new Intent(LoginPageActivity.this, MapsActivity.class);
+//                            startActivity(toHomePage);
+//                            finish();
+//                        }
+//                        // Hide the ProgressBar after successful login
+//                        progressBar.setVisibility(View.GONE);
+//                    });
+
+                    documentReference.get().addOnCompleteListener(task1 -> {
+                        if (task1.isSuccessful()) {
+                            if (Objects.requireNonNull(task1.getResult()).exists()) {
+                                Toast.makeText(LoginPageActivity.this, "Login successfully!", Toast.LENGTH_SHORT).show();
+                                Intent toHomePage = new Intent(LoginPageActivity.this, MapsActivity.class);
+                                startActivity(toHomePage);
+                                finish();
+                            } else {
+                                Toast.makeText(LoginPageActivity.this, "You are a driver!", Toast.LENGTH_SHORT).show();
+                                mAuth.signOut();
+                            }
                         }
                         // Hide the ProgressBar after successful login
                         progressBar.setVisibility(View.GONE);
@@ -107,6 +123,8 @@ public class LoginPageActivity extends AppCompatActivity {
                     progressBar.setVisibility(View.GONE);
                 }
             });
+//            Toast.makeText(LoginPageActivity.this, "Logging in...", Toast.LENGTH_SHORT).show();
+
         });
     }
 

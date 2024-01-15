@@ -13,7 +13,6 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.godee.Driver.Driver.ModelClass.DriverModel;
 import com.example.godee.R;
 import com.example.godee.User.LoginPageActivity;
 import com.google.firebase.auth.FirebaseAuth;
@@ -37,12 +36,6 @@ public class DriverLoginActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
         driver = auth.getCurrentUser();
 
-        if (driver != null) {
-            driver.getTenantId();
-            Intent intent = new Intent(getApplicationContext(), DriverMapsActivity.class);
-            startActivity(intent);
-            finish();
-        }
 
         Objects.requireNonNull(getSupportActionBar()).hide();
         TextView textView;
@@ -70,18 +63,19 @@ public class DriverLoginActivity extends AppCompatActivity {
             auth.signInWithEmailAndPassword(emailText, passwordText).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     DocumentReference docRef = FirebaseFirestore.getInstance().collection("drivers").document(Objects.requireNonNull(auth.getCurrentUser()).getUid());
-                    docRef.get().addOnSuccessListener(documentSnapshot -> {
-                        DriverModel driverModelTemp = documentSnapshot.toObject(DriverModel.class);
-                        if (driverModelTemp.getAccountType() != 200){
-                            Toast.makeText(getApplicationContext(), "You are a user, please login in user page!", Toast.LENGTH_SHORT).show();
-                            auth.signOut();
-                        } else {
-                            Toast.makeText(DriverLoginActivity.this, "Welcome Driver!!", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(getApplicationContext(), DriverMapsActivity.class);
-                            startActivity(intent);
-                            finish();
+                    docRef.get().addOnCompleteListener(task1 -> {
+                        if (task1.isSuccessful()) {
+                            if (Objects.requireNonNull(task1.getResult()).exists()) {
+                                Toast.makeText(DriverLoginActivity.this, "Welcome driver! Have a happy day.", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(DriverLoginActivity.this, DriverMapsActivity.class);
+                                startActivity(intent);
+                                finish();
+                            } else {
+                                Toast.makeText(DriverLoginActivity.this, "Not yet register as our driver!", Toast.LENGTH_SHORT).show();
+                                auth.signOut();
+                                progressBar.setVisibility(View.GONE);
+                            }
                         }
-                        progressBar.setVisibility(View.GONE);
                     });
                 } else {
                     Toast.makeText(DriverLoginActivity.this, "Login Failed!", Toast.LENGTH_SHORT).show();
