@@ -25,6 +25,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
+import com.example.godee.ChatActivity;
 import com.example.godee.Driver.Driver.ModelClass.DriveSession;
 import com.example.godee.Driver.Driver.ModelClass.DriverModel;
 import com.example.godee.R;
@@ -46,6 +47,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -77,10 +79,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Marker UserMarker;
     private LatLng userCurrentLocationInstance;
     FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+    FirebaseUser user = firebaseAuth.getCurrentUser();
     private LatLng userDestination;
     private FusedLocationProviderClient client;
     private String destinationAddress;
     int price = 0;
+
 //    TextView priceView = findViewById(R.id.pricing);
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     @Override
@@ -235,7 +239,25 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
             }
         });
+        Button chatButton;
+        chatButton = findViewById(R.id.current_Chat_Btn);
+        chatButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                db.collection("users").document(Objects.requireNonNull(firebaseAuth.getUid())).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        UserModel temp = task.getResult().toObject(UserModel.class);
+                        Intent intent = new Intent(MapsActivity.this, ChatActivity.class);
+                        intent.putExtra("CURRENT_USER_ID", user.getUid());
+                        assert temp != null;
+                        intent.putExtra("OTHER_USER_ID", temp.getCurrentDriverID());
+                        startActivity(intent);
+                    }
+                });
 
+            }
+        });
 
     }
 
