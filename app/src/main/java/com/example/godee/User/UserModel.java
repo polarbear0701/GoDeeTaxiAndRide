@@ -32,6 +32,10 @@ public class UserModel {
         this.useraddress = useraddress;
         this.accountType = accountType;
         this.currentDriverID = "";
+        this.inRide = false;
+        this.latitude = 0.0;
+        this.longitude = 0.0;
+        this.rating = 5;
     }
 
     public String getName() {

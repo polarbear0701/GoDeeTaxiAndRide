@@ -29,6 +29,10 @@ public class DriverModel {
         this.nationality = nationality;
         this.accountType = accountType;
         this.inSession = false;
+        this.rating = 5;
+        this.currentGuest = "";
+        this.latitude = 0.0;
+        this.longitude = 0.0;
     }
 
     public String getCurrentGuest() {
