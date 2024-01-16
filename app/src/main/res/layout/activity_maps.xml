@@ -154,7 +154,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Call"
+                    android:text="Complete ride"
                     android:id="@+id/current_Call_Btn"
                     android:layout_marginHorizontal="5dp"/>
             </LinearLayout>
