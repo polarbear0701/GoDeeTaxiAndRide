@@ -125,7 +125,6 @@ public class RegisterActivity extends AppCompatActivity {
                     userDataRegister.collection("users").document(userAccount.getCurrentUser().getUid()).set(userModel);
                     Toast.makeText(RegisterActivity.this, "Sign up account successfully", Toast.LENGTH_SHORT).show();
                     Intent backToLogin = new Intent(RegisterActivity.this, LoginPageActivity.class);
-                    userAccount.signOut();
                     startActivity(backToLogin);
                     finish();
                 }
