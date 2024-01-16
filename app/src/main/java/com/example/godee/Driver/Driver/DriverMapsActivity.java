@@ -12,6 +12,7 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -26,6 +27,7 @@ import com.example.godee.ChatActivity;
 import com.example.godee.Driver.Driver.ModelClass.DriverModel;
 import com.example.godee.R;
 import com.example.godee.User.ProfileActivity;
+import com.example.godee.User.UserModel;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
@@ -124,6 +126,22 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
                 Intent intent = new Intent(DriverMapsActivity.this, ChatActivity.class);
                 intent.putExtra("CURRENT_USER_ID", user.getUid());
                 startActivity(intent);
+            }
+        });
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        DocumentReference checkUserRide = db.collection("drivers").document(Objects.requireNonNull(firebaseAuth.getCurrentUser()).getUid());
+        checkUserRide.addSnapshotListener((value, error) -> {
+            if (value != null) {
+                DriverModel driverModel = value.toObject(DriverModel.class);
+                assert driverModel != null;
+                if (driverModel.getInSession()){
+                    LinearLayout currentRideLayoutDriver = findViewById(R.id.currentRide);
+                    currentRideLayoutDriver.setVisibility(View.VISIBLE);
+                }
+                else{
+                    LinearLayout currentRideLayoutDriver = findViewById(R.id.currentRide);
+                    currentRideLayoutDriver.setVisibility(View.GONE);
+                }
             }
         });
     }
