@@ -42,7 +42,6 @@ public class DriverSettingActivity extends AppCompatActivity {
 
         if (nightMode){
             darkModeToggle.setChecked(true);
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         }
         // Remember to fully custom color and put dark mode value in res/values/color
             /*for this easily go to res>values>colors and there Right Click> New> values Resource Files > choose a name

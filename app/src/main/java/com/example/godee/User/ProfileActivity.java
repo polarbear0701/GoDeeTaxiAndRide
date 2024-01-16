@@ -53,9 +53,6 @@ public class ProfileActivity extends AppCompatActivity {
 
         nightMode = sharedPreferences.getBoolean("nightMode", false);
 
-        if (nightMode) {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-        }
 
 //        db.collection("users").document(auth.getUid()).get().addOnCompleteListener(task -> {
 //            if (task.isSuccessful()) {

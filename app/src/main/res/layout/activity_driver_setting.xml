@@ -33,9 +33,9 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Dark Mode"
+                android:text="Map Dark Mode"
                 android:textStyle="bold"
-                android:textColor="@color/light_blue"
+                android:textColor="@color/white"
                 android:textSize="18sp"
                 tools:ignore="HardcodedText" />
             <androidx.appcompat.widget.SwitchCompat
@@ -63,7 +63,7 @@
                 android:layout_weight="1"
                 android:text="Help Center"
                 android:textStyle="bold"
-                android:textColor="@color/light_blue"
+                android:textColor="@color/white"
                 android:textSize="18sp"/>
             <Button
                 android:layout_gravity="center"

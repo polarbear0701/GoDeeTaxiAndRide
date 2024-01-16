@@ -106,7 +106,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:backgroundTint="@color/vermilion"
-                    android:text="edit"
+                    android:text="Setting"
                     android:textColor="@color/not_white"
                     android:textAlignment="center"
                     android:textSize="18sp" />

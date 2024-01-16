@@ -212,7 +212,6 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
 
         if (nightMode){
             mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.style));
-
         }
 
         //set zoom control
