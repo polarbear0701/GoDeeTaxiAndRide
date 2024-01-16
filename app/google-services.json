@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "278737188792",
-    "project_id": "godee-fix",
-    "storage_bucket": "godee-fix.appspot.com"
+    "project_number": "924968973459",
+    "project_id": "godeedemo",
+    "storage_bucket": "godeedemo.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:278737188792:android:ce02eaa23475da1233814d",
+        "mobilesdk_app_id": "1:924968973459:android:84c7dbd726a50949958966",
         "android_client_info": {
           "package_name": "com.example.godee"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyAMd4DCmUZNi4mfOty0hDjBz49qKohlWIw"
+          "current_key": "AIzaSyBRKNkKYE0a1ximTLmU2HlnpdyxXUp89zc"
         }
       ],
       "services": {
