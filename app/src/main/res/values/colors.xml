@@ -19,6 +19,7 @@
     <color name="receiverMessageBackground">#f1f1f1</color>
     <color name="textColor">#27374D</color>
     <color name="searchBar">@android:color/background_light</color>
+    <color name="colorBar">#EEF5FF</color>
     <color name="primary_text_color">#333333</color>
     <color name="background_color">#FFFFFF</color>
 </resources>

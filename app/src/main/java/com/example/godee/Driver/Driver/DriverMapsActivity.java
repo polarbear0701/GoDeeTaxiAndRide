@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
@@ -19,6 +20,7 @@ import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
@@ -38,7 +40,10 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -61,13 +66,15 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
     private ToggleButton toggleOnlineOffline;
     LatLng driverCurrentLocationInstance;
     FirebaseAuth auth = FirebaseAuth.getInstance();
-    FirebaseUser user;
+    FirebaseUser user = auth.getCurrentUser();
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     FusedLocationProviderClient client;
     Handler handler;
     long refresh = 1000;
     Runnable runnable;
     private Boolean checkSessionJoin = false;
+    private boolean nightMode;
+    private SharedPreferences sharedPreferences;
 
 
     @Override
@@ -80,6 +87,10 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
 
         com.example.godee.databinding.ActivityDriverMapsBinding binding = com.example.godee.databinding.ActivityDriverMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        sharedPreferences = getSharedPreferences("MODE", Context.MODE_PRIVATE);
+
+        nightMode = sharedPreferences.getBoolean("nightMode", false);
 
 
 
@@ -123,9 +134,18 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
         driverChatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(DriverMapsActivity.this, ChatActivity.class);
-                intent.putExtra("CURRENT_USER_ID", user.getUid());
-                startActivity(intent);
+                db.collection("drivers").document(Objects.requireNonNull(auth.getUid())).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        DriverModel temp = task.getResult().toObject(DriverModel.class);
+                        Intent intent = new Intent(DriverMapsActivity.this, ChatActivity.class);
+                        intent.putExtra("CURRENT_USER_ID", user.getUid());
+                        assert temp != null;
+                        intent.putExtra("OTHER_USER_ID", temp.getCurrentGuest());
+                        startActivity(intent);
+                    }
+                });
+
             }
         });
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
@@ -189,6 +209,12 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
 //        mMap.getUiSettings().setAllGesturesEnabled(true);
+
+        if (nightMode){
+            mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.style));
+
+        }
+
         //set zoom control
         mMap.getUiSettings().setZoomControlsEnabled(true);
         mMap.setPadding(0, 0,0, 400);
