@@ -94,9 +94,9 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
         com.example.godee.databinding.ActivityDriverMapsBinding binding = com.example.godee.databinding.ActivityDriverMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        sharedPreferences = getSharedPreferences("MODE", Context.MODE_PRIVATE);
-
-        nightMode = sharedPreferences.getBoolean("nightMode", false);
+//        sharedPreferences = getSharedPreferences("MODE", Context.MODE_PRIVATE);
+//
+//        nightMode = sharedPreferences.getBoolean("nightMode", false);
 
 
 
@@ -107,7 +107,7 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
-        assert mapFragment != null;
+
         mapFragment.getMapAsync(this);
         handler = new Handler();
         handler.postDelayed(runnable = () -> {

@@ -245,7 +245,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         getUserCurrentPosition();
         if (nightMode){
             mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.style));
-
         }
 
 
