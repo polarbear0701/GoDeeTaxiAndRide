@@ -183,7 +183,7 @@
                     android:id="@+id/message_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Message"
+                    android:text="Chat"
                     android:layout_marginRight="16dp"
                     android:minWidth="96dp"
                     android:minHeight="48dp"
