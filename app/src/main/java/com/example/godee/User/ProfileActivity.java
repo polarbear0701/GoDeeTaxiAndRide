@@ -76,17 +76,16 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), UserInfoActivity.class);
+                intent.putExtra("CURRENT_USER_ID", user.getUid());
                 startActivity(intent);
-                finish();
             }
         });
 
         settingEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), UserSettingActivity.class);
+                Intent intent = new Intent(ProfileActivity.this, UserSettingActivity.class);
                 startActivity(intent);
-                finish();
             }
         });
 

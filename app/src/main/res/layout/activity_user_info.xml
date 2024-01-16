@@ -1,19 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".User.UserInfoActivity">
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".User.UserInfoActivity"
+    android:background="@drawable/white_background">
 
+    <!-- User Name -->
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Name: "
+        android:textSize="18sp"/>
+
+    <!-- User Email -->
+    <TextView
+        android:id="@+id/email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/name"
+        android:layout_marginTop="8dp"
+        android:text="Email: "
+        android:textSize="18sp"/>
+
+    <!-- User Phone Number -->
+    <TextView
+        android:id="@+id/phone_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/email"
+        android:layout_marginTop="8dp"
+        android:text="Phone Number: "
+        android:textSize="18sp"/>
+
+    <!-- User Age -->
+    <TextView
+        android:id="@+id/age"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/phone_number"
+        android:layout_marginTop="8dp"
+        android:text="Age: "
+        android:textSize="18sp"/>
+
+    <!-- User Nationality -->
+    <TextView
+        android:id="@+id/nationality"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/age"
+        android:layout_marginTop="8dp"
+        android:text="Nationality: "
+        android:textSize="18sp"/>
+
+    <!-- User Account Type -->
+    <TextView
+        android:id="@+id/account_type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/nationality"
+        android:layout_marginTop="8dp"
+        android:text="Account Type: "
+        android:textSize="18sp"/>
+
+    <!-- User Rating -->
+    <TextView
+        android:id="@+id/rating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/account_type"
+        android:layout_marginTop="8dp"
+        android:text="Rating: "
+        android:textSize="18sp"/>
+
+    <!-- Back Button -->
     <Button
+        android:id="@+id/info_backBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/vermilion"
         android:text="Back"
         android:textColor="@color/not_white"
-        android:id="@+id/info_backBtn"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"/>
+        android:layout_below="@id/rating"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"/>
+
 </RelativeLayout>
