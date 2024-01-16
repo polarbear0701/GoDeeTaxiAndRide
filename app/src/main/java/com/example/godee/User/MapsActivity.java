@@ -5,7 +5,10 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -19,6 +22,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import com.example.godee.Driver.Driver.ModelClass.DriveSession;
@@ -31,6 +35,8 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
@@ -88,6 +94,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Button confirmBooking = findViewById(R.id.btnConfirmBooking);
         confirmBooking.setOnClickListener(v -> {
             Toast.makeText(this, "Booking confirmed", Toast.LENGTH_SHORT).show();
+            db.collection("users").document(Objects.requireNonNull(firebaseAuth.getUid())).update("inRide", true);
+            LinearLayout bookingUI = findViewById(R.id.bookingView);
+            bookingUI.setVisibility(View.GONE);
             CollectionReference onlineDriver = db.collection("drivers");
             onlineDriver.whereEqualTo("inSession", true).get().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
@@ -103,11 +112,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             minDistance = distance;
                             driverId = task.getResult().getDocuments().get(i).getId();
                         }
-//                        Log.d("Driver" + i, task.getResult().getDocuments().get(i).getId() + " " +distance);
+                        Log.d("Driver" + i, task.getResult().getDocuments().get(i).getId() + " " +userCurrentLocationInstance.toString());
                     }
-//                    Log.d("Min distance", String.valueOf(minDistance) + " " + driverId);
+//                    driverId = "vSa5DIFPfFYL5ylal4E9Xp3Df273";
+                    Log.d("Min distance", String.valueOf(minDistance) + " " + driverId);
                     DriveSession newSession = new DriveSession(driverId, Objects.requireNonNull(mAuth.getCurrentUser()).getUid(), userCurrentLocationInstance.latitude, userCurrentLocationInstance.longitude, userDestination.latitude, userDestination.longitude, destinationAddress);
-//                    db.collection("sessions").document(newSession.getSessionID()).set(newSession);
+                    db.collection("sessions").document(newSession.getSessionID()).set(newSession);
+                    db.collection("users").document(mAuth.getCurrentUser().getUid()).update("userAllSession", FieldValue.arrayUnion(newSession));
                     db.collection("drivers").document("vSa5DIFPfFYL5ylal4E9Xp3Df273").update("driverAllSession", FieldValue.arrayUnion(newSession));
                     db.collection("drivers").document("vSa5DIFPfFYL5ylal4E9Xp3Df273").update(("inSession"), false);
                     DocumentReference driver = db.collection("drivers").document("vSa5DIFPfFYL5ylal4E9Xp3Df273");
@@ -161,7 +172,33 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
 
         });
-        Toast.makeText(this, firebaseAuth.getUid(), Toast.LENGTH_SHORT).show();
+
+        DocumentReference checkUserRide = db.collection("users").document(Objects.requireNonNull(firebaseAuth.getCurrentUser()).getUid());
+        checkUserRide.addSnapshotListener((value, error) -> {
+            if (value != null) {
+
+                Button cancelBooking = findViewById(R.id.current_Cancel_Btn);
+                cancelBooking.setOnClickListener(v -> {
+                    Toast.makeText(this, "Booking cancelled", Toast.LENGTH_SHORT).show();
+                    db.collection("users").document(Objects.requireNonNull(firebaseAuth.getUid())).update("inRide", false);
+                    db.collection("drivers").document("vSa5DIFPfFYL5ylal4E9Xp3Df273").update("inSession", true);
+                });
+                UserModel user = value.toObject(UserModel.class);
+                assert user != null;
+                if (user.getInRide()) {
+                    LinearLayout currentDriveLayout = findViewById(R.id.currentRide);
+                    currentDriveLayout.setVisibility(View.VISIBLE);
+                    searchView.setVisibility(View.GONE);
+                }
+                else{
+                    LinearLayout currentDriveLayout = findViewById(R.id.currentRide);
+                    currentDriveLayout.setVisibility(View.GONE);
+                    searchView.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+
     }
 
     @Override
@@ -183,7 +220,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             DriverModel temp = task.getResult().getDocuments().get(i).toObject(DriverModel.class);
                             assert temp != null;
                             LatLng driverLocation = new LatLng(temp.getLatitude(), temp.getLongitude());
-                            Marker driverMarker = mMap.addMarker(new MarkerOptions().position(driverLocation).title("Driver " + i));
+                            Marker driverMarker = mMap.addMarker(new MarkerOptions().position(driverLocation).title("Driver " + i).icon(bitmapDescriptorFromVector(getApplicationContext(), R.drawable.car_placeholder)));
                             onlineDriverMarkers.add(driverMarker);
                         }
                         Log.d("online drivers", onlineDriverMarkers.toString());
@@ -193,6 +230,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //set padding for zoom control
         mMap.getUiSettings().setZoomControlsEnabled(true);
         mMap.setPadding(0, 0,0, 400);
+
+
+    }
+
+    private BitmapDescriptor bitmapDescriptorFromVector(Context context, int vectorResID)  {
+        Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorResID);
+        vectorDrawable.setBounds(0,0, vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight());
+        Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        vectorDrawable.draw(canvas);
+        return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
 
     //get permission for location
@@ -256,7 +304,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         TextView priceView = findViewById(R.id.pricing);
         bookingUI.setVisibility(View.VISIBLE);
 
-        String apiKey = "AIzaSyB8ycsYUrwFVKgsW3aQ8OYx51NPm8TktMc";
+//        String apiKey = "AIzaSyB8ycsYUrwFVKgsW3aQ8OYx51NPm8TktMc";
+        String apiKey = "AIzaSyCVCXFuUaZxRKVlT-rqh_CmQjBJb_sDUVg";
         String second = "AIzaSyDOr1sNIfAdOHQ-BuktUDmIL4ySNjLdxL4";
         GeoApiContext context = new GeoApiContext.Builder()
                 .apiKey(apiKey)
@@ -304,8 +353,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
+
+
     private double matchingAlgorithm(LatLng origin, LatLng destination){
-        String apiKey = "AIzaSyB8ycsYUrwFVKgsW3aQ8OYx51NPm8TktMc";
+        String apiKey = "AIzaSyCVCXFuUaZxRKVlT-rqh_CmQjBJb_sDUVg";
         GeoApiContext context = new GeoApiContext.Builder()
                 .apiKey(apiKey)
                 .build();
@@ -327,7 +378,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             return distanceInKilometers;
         } catch (Exception e) {
             e.printStackTrace();
-            Log.e("Error getting distance", e.getMessage());
+            Log.e("Error distance driver", e.getMessage());
             Toast.makeText(this, "Failed", Toast.LENGTH_SHORT).show();
         }
         return 0;

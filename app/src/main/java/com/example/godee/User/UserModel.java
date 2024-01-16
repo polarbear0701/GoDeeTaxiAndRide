@@ -1,5 +1,10 @@
 package com.example.godee.User;
 
+import com.example.godee.Driver.Driver.ModelClass.DriveSession;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class UserModel {
     private String name;
     private String email;
@@ -8,22 +13,16 @@ public class UserModel {
     private String nationality;
     private userAddress useraddress;
     private int accountType;
+    private String currentDriverID;
     private Double latitude, longitude;
-    private String currentDriver;
     private int rating;
+    private Boolean inRide;
+    private List<DriveSession> userAllSession = new ArrayList<>();
 
     public UserModel() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
-    public UserModel(String name, String email, String phoneNumber, int age, String nationality, userAddress useraddress) {
-        this.name = name;
-        this.email = email;
-        this.phoneNumber = phoneNumber;
-        this.age = age;
-        this.nationality = nationality;
-        this.useraddress = useraddress;
-    }
     public UserModel(String name, String email, String phoneNumber, int age, String nationality, userAddress useraddress, int accountType) {
         this.name = name;
         this.email = email;
@@ -32,6 +31,7 @@ public class UserModel {
         this.nationality = nationality;
         this.useraddress = useraddress;
         this.accountType = accountType;
+        this.currentDriverID = "";
     }
 
     public String getName() {
@@ -106,20 +106,44 @@ public class UserModel {
         this.accountType = accountType;
     }
 
-    public String getCurrentDriver() {
-        return currentDriver;
-    }
-
-    public void setCurrentDriver(String currentDriver) {
-        this.currentDriver = currentDriver;
-    }
-
     public int getRating() {
         return rating;
     }
 
     public void setRating(int rating) {
         this.rating = rating;
+    }
+
+    public Boolean getInRide() {
+        return inRide;
+    }
+
+    public void setInRide(Boolean inRide) {
+        this.inRide = inRide;
+    }
+
+    public userAddress getUseraddress() {
+        return useraddress;
+    }
+
+    public void setUseraddress(userAddress useraddress) {
+        this.useraddress = useraddress;
+    }
+
+    public List<DriveSession> getUserAllSession() {
+        return userAllSession;
+    }
+
+    public void setUserAllSession(ArrayList<DriveSession> userAllSession) {
+        this.userAllSession = userAllSession;
+    }
+
+    public String getCurrentDriverID() {
+        return currentDriverID;
+    }
+
+    public void setCurrentDriverID(String currentDriverID) {
+        this.currentDriverID = currentDriverID;
     }
 }
 

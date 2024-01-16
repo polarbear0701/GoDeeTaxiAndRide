@@ -7,6 +7,7 @@ import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.godee.ChatActivity;
 import com.example.godee.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -29,6 +30,26 @@ public class DriverProfileActivity extends AppCompatActivity {
 
         Button driver_info = findViewById(R.id.profile_driver_edit);
         Button driver_setting = findViewById(R.id.profile_driver_setting_edit);
+        Button driver_logout = findViewById(R.id.profile_driver_logout);
+        Button driver_chat = findViewById(R.id.profile_driver_chat);
+
+        driver_chat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        driver_logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                auth.signOut();
+                Intent intent = new Intent(getApplicationContext(), DriverLoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
 
 
         driver_info.setOnClickListener(new View.OnClickListener() {

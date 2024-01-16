@@ -3,7 +3,7 @@ package com.example.godee.Driver.Driver.ModelClass;
 import com.google.android.gms.maps.model.LatLng;
 
 public class DriveSession {
-    enum DriverStatus{
+    public enum DriverStatus{
         PENDING,
         ACCEPTED,
         CANCELLED,
@@ -18,7 +18,7 @@ public class DriveSession {
     private double endLocationLongitude;
     private String addressInString;
     //    private Date date;
-    private DriverStatus statusCode;
+    public DriverStatus statusCode;
 
     public DriveSession(String driverID, String userID, double startLocationLatitude, double startLocationLongitude, double endLocationLatitude, double endLocationLongitude, String addressInString) {
         this.sessionID = driverID + "_" + userID;

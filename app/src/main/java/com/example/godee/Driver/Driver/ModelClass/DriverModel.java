@@ -2,20 +2,20 @@ package com.example.godee.Driver.Driver.ModelClass;
 
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class DriverModel {
     private String name;
     private String email;
     private String phoneNumber;
-    private String currentUserID;
-    private int rating;
     private int age;
+    private String currentGuest;
     private String nationality;
+    private int rating;
     private int accountType;
     private Double latitude, longitude;
     private Boolean inSession;
-    private ArrayList<DriveSession> driverAllSession = new ArrayList<>();
-
+    private List<DriveSession> driverAllSession = new ArrayList<>();
 
     public DriverModel() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
@@ -24,13 +24,19 @@ public class DriverModel {
     public DriverModel(String name, String email, String phoneNumber, int age, String nationality, int accountType) {
         this.name = name;
         this.email = email;
-        this.currentUserID = "";
         this.phoneNumber = phoneNumber;
         this.age = age;
-        this.rating = 5;
         this.nationality = nationality;
         this.accountType = accountType;
         this.inSession = false;
+    }
+
+    public String getCurrentGuest() {
+        return currentGuest;
+    }
+
+    public void setCurrentGuest(String currentGuest) {
+        this.currentGuest = currentGuest;
     }
 
     public String getName() {
@@ -105,21 +111,13 @@ public class DriverModel {
         this.inSession = inSession;
     }
 
-    public ArrayList<DriveSession> getDriverAllSession() {
+    public List<DriveSession> getDriverAllSession() {
         return driverAllSession;
     }
 
-    public void setDriverAllSession(ArrayList<DriveSession> driverAllSession) {
-        this.driverAllSession = driverAllSession;
-    }
-
-    public String getCurrentUserID() {
-        return currentUserID;
-    }
-
-    public void setCurrentUserID(String currentUserID) {
-        this.currentUserID = currentUserID;
-    }
+//    public void setDriverAllSession(ArrayList<DriveSession> driverAllSession) {
+//        this.driverAllSession = driverAllSession;
+//    }
 
     public int getRating() {
         return rating;
@@ -127,5 +125,9 @@ public class DriverModel {
 
     public void setRating(int rating) {
         this.rating = rating;
+    }
+
+    public void setDriverAllSession(List<DriveSession> driverAllSession) {
+        this.driverAllSession = driverAllSession;
     }
 }
