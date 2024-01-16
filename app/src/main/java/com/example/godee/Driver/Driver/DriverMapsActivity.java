@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
@@ -19,6 +20,7 @@ import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
@@ -38,6 +40,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -70,6 +73,8 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
     long refresh = 1000;
     Runnable runnable;
     private Boolean checkSessionJoin = false;
+    private boolean nightMode;
+    private SharedPreferences sharedPreferences;
 
 
     @Override
@@ -82,6 +87,10 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
 
         com.example.godee.databinding.ActivityDriverMapsBinding binding = com.example.godee.databinding.ActivityDriverMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        sharedPreferences = getSharedPreferences("MODE", Context.MODE_PRIVATE);
+
+        nightMode = sharedPreferences.getBoolean("nightMode", false);
 
 
 
@@ -200,6 +209,12 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
 //        mMap.getUiSettings().setAllGesturesEnabled(true);
+
+        if (nightMode){
+            mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.style));
+
+        }
+
         //set zoom control
         mMap.getUiSettings().setZoomControlsEnabled(true);
         mMap.setPadding(0, 0,0, 400);
