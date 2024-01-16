@@ -24,5 +24,4 @@
             android:background="@drawable/page_navigation_outline" />
 
     </LinearLayout>
-
 </RelativeLayout>

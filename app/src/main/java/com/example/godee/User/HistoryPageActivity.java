@@ -24,6 +24,8 @@ public class HistoryPageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history_page);
 
+        getSupportActionBar().hide();
+
         // Initialize RecyclerView
         recyclerView = findViewById(R.id.historyRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));

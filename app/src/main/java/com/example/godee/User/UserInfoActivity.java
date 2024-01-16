@@ -29,6 +29,8 @@ public class UserInfoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_info);
 
+        getSupportActionBar().hide();
+
         currentUserID = getIntent().getStringExtra("CURRENT_USER_ID");
         Log.d("UserInfoCurrentId", currentUserID);
         db = FirebaseFirestore.getInstance(); // Initialize Firestore
