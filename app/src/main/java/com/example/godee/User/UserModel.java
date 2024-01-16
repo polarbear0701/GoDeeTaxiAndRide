@@ -126,14 +126,6 @@ public class UserModel {
         this.inRide = inRide;
     }
 
-    public userAddress getUseraddress() {
-        return useraddress;
-    }
-
-    public void setUseraddress(userAddress useraddress) {
-        this.useraddress = useraddress;
-    }
-
     public List<DriveSession> getUserAllSession() {
         return userAllSession;
     }
