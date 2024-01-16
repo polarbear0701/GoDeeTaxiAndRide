@@ -3,41 +3,53 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="@drawable/layout_border"
+    android:layout_margin="8dp"> >
 
     <!-- Session ID -->
     <TextView
         android:id="@+id/tvSessionId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Session ID"/>
+        android:text="Session ID"
+        android:layout_marginBottom="8dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"/>
 
     <!-- Driver ID -->
     <TextView
         android:id="@+id/tvDriverId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Driver ID"/>
+        android:text="Driver ID"
+        android:layout_marginBottom="8dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"/>
 
     <!-- User ID -->
     <TextView
         android:id="@+id/tvUserId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="User ID"/>
+        android:text="User ID"
+        android:layout_marginBottom="8dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"/>
 
     <!-- Start Location -->
     <TextView
         android:id="@+id/tvStartLocation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Start Location"/>
+        android:text="Start Location"
+        android:layout_marginBottom="8dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"/>
 
     <!-- End Location -->
     <TextView
         android:id="@+id/tvEndLocation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="End Location"/>
+        android:text="End Location"
+        android:layout_marginBottom="8dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"/>
 
 </LinearLayout>
