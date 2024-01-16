@@ -22,4 +22,11 @@
     <color name="colorBar">#EEF5FF</color>
     <color name="primary_text_color">#333333</color>
     <color name="background_color">#FFFFFF</color>
+    <color name="red">#e23e3d</color>
+    <color name="blue">#3448e9</color>
+    <color name="lightpurple">#aa3ee2</color>
+    <color name="green">#32905b</color>
+    <color name="yellow">#ff9201</color>
+
+
 </resources>
