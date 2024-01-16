@@ -76,6 +76,12 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
     private boolean nightMode;
     private SharedPreferences sharedPreferences;
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        db.collection("drivers").document(Objects.requireNonNull(auth.getCurrentUser()).getUid()).update("inSession", false);
+        checkSessionJoin = false;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,14 +123,14 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
         statusTextView = findViewById(R.id.statusTextView);
 
         toggleOnlineOffline.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            toggleOnlineOffline.setEnabled(false);
-
+            toggleOnlineOffline.setEnabled(true);
             if (isChecked) {
-                // The driver is online
-                goOnline();
-            } else {
-                // The driver is offline
-                goOffline();
+                db.collection("drivers").document(Objects.requireNonNull(auth.getCurrentUser()).getUid()).update("inSession", true);
+                checkSessionJoin = true;
+            }
+            else{
+                checkSessionJoin = false;
+                leftSession();
             }
         });
 
@@ -149,12 +155,12 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
             }
         });
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-        DocumentReference checkUserRide = db.collection("drivers").document(Objects.requireNonNull(firebaseAuth.getCurrentUser()).getUid());
-        checkUserRide.addSnapshotListener((value, error) -> {
+        DocumentReference checkDriverRide = db.collection("drivers").document(Objects.requireNonNull(firebaseAuth.getCurrentUser()).getUid());
+        checkDriverRide.addSnapshotListener((value, error) -> {
             if (value != null) {
                 DriverModel driverModel = value.toObject(DriverModel.class);
                 assert driverModel != null;
-                if (driverModel.getInSession()){
+                if (!driverModel.getInSession() && !driverModel.getCurrentGuest().equals("")) {
                     LinearLayout currentRideLayoutDriver = findViewById(R.id.currentRide);
                     currentRideLayoutDriver.setVisibility(View.VISIBLE);
                 }
@@ -273,7 +279,7 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
             if (value != null && value.exists()){
                 docRef.update("latitude", driverCurrentLocationInstance.latitude);
                 docRef.update("longitude", driverCurrentLocationInstance.longitude);
-                Toast.makeText(DriverMapsActivity.this, "Driver is online" + driverCurrentLocationInstance, Toast.LENGTH_SHORT).show();
+
             }
             else{
                 Toast.makeText(DriverMapsActivity.this, "Driver is offline", Toast.LENGTH_SHORT).show();
@@ -281,13 +287,8 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
         });
     }
 
-    private void goOnline() {
-        checkSessionJoin = true;
-        joinSession();
+    public void leftSession(){
+        DocumentReference docRef = db.collection("drivers").document(Objects.requireNonNull(auth.getCurrentUser()).getUid());
+        docRef.update("inSession", false);
     }
-
-    private void goOffline() {
-        checkSessionJoin = true;
-    }
-
 }
