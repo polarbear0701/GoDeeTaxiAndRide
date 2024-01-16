@@ -14,8 +14,11 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import java.util.ArrayList;
 import java.util.List;
 import com.example.godee.Driver.Driver.ModelClass.DriveSession;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 public class HistoryPageActivity extends AppCompatActivity {
+    private FirebaseFirestore db;
     private RecyclerView recyclerView;
     private HistoryAdapter adapter;
     private List<DriveSession> driveSessionList;
@@ -40,8 +43,28 @@ public class HistoryPageActivity extends AppCompatActivity {
         BottomNavigationView pageMenu = findViewById(R.id.page_navigation);
         pageMenu.setSelectedItemId(R.id.activity_history);
         pageNavigation(pageMenu);
-    }
 
+        db = FirebaseFirestore.getInstance();
+        fetchSessionsFromFirebase();
+    }
+    private void fetchSessionsFromFirebase() {
+        db.collection("sessions").get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                driveSessionList = new ArrayList<>();
+                for (QueryDocumentSnapshot document : task.getResult()) {
+                    DriveSession session = document.toObject(DriveSession.class);
+                    driveSessionList.add(session);
+                }
+                updateRecyclerView();
+            } else {
+                // Handle errors
+            }
+        });
+    }
+    private void updateRecyclerView() {
+        adapter = new HistoryAdapter(driveSessionList);
+        recyclerView.setAdapter(adapter);
+    }
     public void pageNavigation(BottomNavigationView pageMenu) {
         pageMenu.setOnItemSelectedListener(item ->
         {   int itemId = item.getItemId();
