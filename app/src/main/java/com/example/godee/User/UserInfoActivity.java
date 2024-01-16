@@ -41,7 +41,6 @@ public class UserInfoActivity extends AppCompatActivity {
         phoneNumberView = findViewById(R.id.phone_number);
         ageView = findViewById(R.id.age);
         nationalityView = findViewById(R.id.nationality);
-        accountTypeView = findViewById(R.id.account_type);
         ratingView = findViewById(R.id.rating);
 
         Button backBtn = findViewById(R.id.info_backBtn);

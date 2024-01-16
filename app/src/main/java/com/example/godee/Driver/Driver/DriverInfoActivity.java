@@ -43,7 +43,6 @@ public class DriverInfoActivity extends AppCompatActivity {
         phoneNumberView = findViewById(R.id.driver_phone_number);
         ageView = findViewById(R.id.driver_age);
         nationalityView = findViewById(R.id.driver_nationality);
-        accountTypeView = findViewById(R.id.driver_account_type);
         ratingView = findViewById(R.id.driver_rating);
 
         Button backBtn = findViewById(R.id.driver_info_backBtn);
