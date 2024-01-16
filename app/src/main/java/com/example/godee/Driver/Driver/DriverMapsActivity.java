@@ -39,6 +39,8 @@ import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -61,7 +63,7 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
     private ToggleButton toggleOnlineOffline;
     LatLng driverCurrentLocationInstance;
     FirebaseAuth auth = FirebaseAuth.getInstance();
-    FirebaseUser user;
+    FirebaseUser user = auth.getCurrentUser();
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     FusedLocationProviderClient client;
     Handler handler;
@@ -123,9 +125,18 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
         driverChatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(DriverMapsActivity.this, ChatActivity.class);
-                intent.putExtra("CURRENT_USER_ID", user.getUid());
-                startActivity(intent);
+                db.collection("drivers").document(Objects.requireNonNull(auth.getUid())).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        DriverModel temp = task.getResult().toObject(DriverModel.class);
+                        Intent intent = new Intent(DriverMapsActivity.this, ChatActivity.class);
+                        intent.putExtra("CURRENT_USER_ID", user.getUid());
+                        assert temp != null;
+                        intent.putExtra("OTHER_USER_ID", temp.getCurrentGuest());
+                        startActivity(intent);
+                    }
+                });
+
             }
         });
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();

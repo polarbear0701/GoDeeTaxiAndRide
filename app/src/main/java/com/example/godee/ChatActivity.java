@@ -36,7 +36,7 @@ import java.util.Objects;
 
 public class ChatActivity extends AppCompatActivity {
     private String currentUserID;
-    private String otherUserID = "2XSlmylRYNTcTjyr8LwFj5AcPgE3"; // Hardcoded other user ID
+    private String otherUserID; // Hardcoded other user ID
     private FirebaseFirestore db;
     private EditText messageInput;
     private ImageButton sendButton;
@@ -50,6 +50,7 @@ public class ChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
         currentUserID = getIntent().getStringExtra("CURRENT_USER_ID");
+        otherUserID = getIntent().getStringExtra("OTHER_USER_ID");
         Log.d("test ID", currentUserID);
         db = FirebaseFirestore.getInstance();
 

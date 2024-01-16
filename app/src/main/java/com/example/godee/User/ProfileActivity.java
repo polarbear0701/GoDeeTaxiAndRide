@@ -8,15 +8,21 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
 import com.example.godee.ChatActivity;
 import com.example.godee.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.Objects;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -98,9 +104,18 @@ public class ProfileActivity extends AppCompatActivity {
         chatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ProfileActivity.this, ChatActivity.class);
-                intent.putExtra("CURRENT_USER_ID", user.getUid());
-                startActivity(intent);
+                db.collection("users").document(Objects.requireNonNull(auth.getUid())).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        UserModel temp = task.getResult().toObject(UserModel.class);
+                        Intent intent = new Intent(ProfileActivity.this, ChatActivity.class);
+                        intent.putExtra("CURRENT_USER_ID", user.getUid());
+                        assert temp != null;
+                        intent.putExtra("OTHER_USER_ID", temp.getCurrentDriverID());
+                        startActivity(intent);
+                    }
+                });
+
             }
         });
     }
