@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.godee.ChatActivity;
 import com.example.godee.R;
+import com.example.godee.Driver.Driver.DriverInfoActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -56,6 +57,7 @@ public class DriverProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), DriverInfoActivity.class);
+                intent.putExtra("CURRENT_USER_ID", driver.getUid());
                 startActivity(intent);
             }
         });
