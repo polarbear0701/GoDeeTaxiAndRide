@@ -42,10 +42,13 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.maps.DirectionsApiRequest;
@@ -61,6 +64,7 @@ import com.google.maps.model.Unit;
 
 
 import java.io.IOException;
+import java.sql.Driver;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -94,14 +98,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Button confirmBooking = findViewById(R.id.btnConfirmBooking);
         confirmBooking.setOnClickListener(v -> {
             Toast.makeText(this, "Booking confirmed", Toast.LENGTH_SHORT).show();
-            db.collection("users").document(Objects.requireNonNull(firebaseAuth.getUid())).update("inRide", true);
+
             LinearLayout bookingUI = findViewById(R.id.bookingView);
             bookingUI.setVisibility(View.GONE);
+
             CollectionReference onlineDriver = db.collection("drivers");
             onlineDriver.whereEqualTo("inSession", true).get().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     double minDistance = 500;
                     String driverId = "";
+
                     FirebaseAuth mAuth = FirebaseAuth.getInstance();
                     for (int i = 0; i < task.getResult().size(); i++) {
                         DriverModel temp = task.getResult().getDocuments().get(i).toObject(DriverModel.class);
@@ -114,14 +120,26 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         }
                         Log.d("Driver" + i, task.getResult().getDocuments().get(i).getId() + " " +userCurrentLocationInstance.toString());
                     }
-                    Log.d("Min distance", String.valueOf(minDistance) + " " + driverId);
-                    DriveSession newSession = new DriveSession(driverId, Objects.requireNonNull(mAuth.getCurrentUser()).getUid(), userCurrentLocationInstance.latitude, userCurrentLocationInstance.longitude, userDestination.latitude, userDestination.longitude, destinationAddress);
-                    db.collection("sessions").document(newSession.getSessionID()).set(newSession);
-                    db.collection("users").document(mAuth.getCurrentUser().getUid()).update("userAllSession", FieldValue.arrayUnion(newSession));
-                    db.collection("drivers").document(driverId).update("driverAllSession", FieldValue.arrayUnion(newSession));
-                    db.collection("drivers").document(driverId).update(("inSession"), false);
-                    DocumentReference driver = db.collection("drivers").document(driverId);
-                    driver.update("currentGuest", mAuth.getCurrentUser().getUid());
+                    if (!driverId.equals("")) {
+                        Log.d("Min distance", String.valueOf(minDistance) + " " + driverId);
+                        DriveSession newSession = new DriveSession(driverId, Objects.requireNonNull(mAuth.getCurrentUser()).getUid(), userCurrentLocationInstance.latitude, userCurrentLocationInstance.longitude, userDestination.latitude, userDestination.longitude, destinationAddress);
+                        db.collection("sessions").document(newSession.getSessionID()).set(newSession);
+
+//                    db.collection("users").document(mAuth.getCurrentUser().getUid()).update("userAllSession", FieldValue.arrayUnion(newSession));
+//                    db.collection("drivers").document(driverId).update("driverAllSession", FieldValue.arrayUnion(newSession));
+
+                        db.collection("drivers").document(driverId).update(("inSession"), false);
+                        db.collection("users").document(Objects.requireNonNull(firebaseAuth.getUid())).update("inRide", true);
+
+                        DocumentReference driver = db.collection("drivers").document(driverId);
+                        driver.update("currentGuest", mAuth.getCurrentUser().getUid());
+
+                        DocumentReference user = db.collection("users").document(firebaseAuth.getUid());
+                        user.update("currentDriverID", driverId);
+                    }
+                    else {
+                        Toast.makeText(this, "No driver available", Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
         });
@@ -178,9 +196,30 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 Button cancelBooking = findViewById(R.id.current_Cancel_Btn);
                 cancelBooking.setOnClickListener(v -> {
+                    UserModel temp = value.toObject(UserModel.class);
                     Toast.makeText(this, "Booking cancelled", Toast.LENGTH_SHORT).show();
                     db.collection("users").document(Objects.requireNonNull(firebaseAuth.getUid())).update("inRide", false);
-                    db.collection("drivers").document("vSa5DIFPfFYL5ylal4E9Xp3Df273").update("inSession", true);
+                    assert temp != null;
+                    db.collection("drivers").document(temp.getCurrentDriverID()).update("inSession", true);
+
+                    String UID = temp.getCurrentDriverID() + "_" + firebaseAuth.getUid();
+                    db.collection("sessions").document(UID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            DriveSession driveSession = task.getResult().toObject(DriveSession.class);
+                            assert driveSession != null;
+                            db.collection("sessions").document(UID).update("statusCode", DriveSession.DriverStatus.CANCELLED);
+
+                            driveSession.setStatusCode(DriveSession.DriverStatus.CANCELLED);
+
+                            db.collection("users").document(firebaseAuth.getUid()).update("userAllSession", FieldValue.arrayUnion(driveSession));
+                            db.collection("drivers").document(temp.getCurrentDriverID()).update("driverAllSession", FieldValue.arrayUnion(driveSession));
+
+                            db.collection("users").document(firebaseAuth.getUid()).update("currentDriverID", "");
+                            db.collection("drivers").document(temp.getCurrentDriverID()).update("currentGuest", "");
+                        }
+                    });
+
                 });
                 UserModel user = value.toObject(UserModel.class);
                 assert user != null;
