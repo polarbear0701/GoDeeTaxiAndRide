@@ -3,7 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="@drawable/layout_border"
+    android:layout_margin="8dp"> >
 
     <!-- Session ID -->
     <TextView
@@ -11,7 +13,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Session ID"
-        android:textColor="@color/white"/>
+        android:layout_marginBottom="8dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"/>
 
     <!-- Driver ID -->
     <TextView
@@ -19,7 +22,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Driver ID"
-        android:textColor="@color/white"/>
+        android:layout_marginBottom="8dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"/>
 
     <!-- User ID -->
     <TextView
@@ -27,7 +31,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="User ID"
-        android:textColor="@color/white"/>
+        android:layout_marginBottom="8dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"/>
 
     <!-- Start Location -->
     <TextView
@@ -35,7 +40,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Start Location"
-        android:textColor="@color/white"/>
+        android:layout_marginBottom="8dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"/>
 
     <!-- End Location -->
     <TextView
@@ -43,6 +49,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="End Location"
-        android:textColor="@color/white"/>
+        android:layout_marginBottom="8dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"/>
 
 </LinearLayout>
