@@ -26,6 +26,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import com.example.godee.ChatActivity;
+import com.example.godee.Driver.Driver.ModelClass.DriveSession;
 import com.example.godee.Driver.Driver.ModelClass.DriverModel;
 import com.example.godee.R;
 import com.example.godee.User.ProfileActivity;
@@ -116,6 +117,18 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
             handler.postDelayed(runnable, refresh);
 
         }, refresh);
+
+        Button confirmDrive = findViewById(R.id.confirm_ride_btn);
+        confirmDrive.setOnClickListener(v -> {
+            DocumentReference docRef = db.collection("drivers").document(Objects.requireNonNull(auth.getCurrentUser()).getUid());
+            docRef.get().addOnCompleteListener(task -> {
+               DriverModel driver = task.getResult().toObject(DriverModel.class);
+                assert driver != null;
+                String UID = auth.getUid() + "_" + driver.getCurrentGuest();
+                db.collection("sessions").document(UID).update("statusCode", DriveSession.DriverStatus.ACCEPTED);
+            });
+        });
+
 
         Button joinSessionBtn = findViewById(R.id.btn);
         joinSessionBtn.setOnClickListener(v -> checkSessionJoin = true);

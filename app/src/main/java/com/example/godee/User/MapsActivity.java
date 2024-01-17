@@ -65,6 +65,8 @@ import com.google.maps.model.TravelMode;
 import com.google.maps.model.Unit;
 
 
+import org.w3c.dom.Text;
+
 import java.io.IOException;
 import java.sql.Driver;
 import java.util.ArrayList;
@@ -127,13 +129,29 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     if (!driverId.equals("")) {
                         Log.d("Min distance", String.valueOf(minDistance) + " " + driverId);
                         DriveSession newSession = new DriveSession(driverId, Objects.requireNonNull(mAuth.getCurrentUser()).getUid(), userCurrentLocationInstance.latitude, userCurrentLocationInstance.longitude, userDestination.latitude, userDestination.longitude, destinationAddress);
-                        db.collection("sessions").document(newSession.getSessionID()).set(newSession);
+
+                        try {
+                            db.collection("sessions").document(newSession.getSessionID()).set(newSession);
+                        }
+                        catch (Exception e) {
+                            e.printStackTrace();
+                            Log.e("Error loading", e.getMessage());
+                        }
 
 //                    db.collection("users").document(mAuth.getCurrentUser().getUid()).update("userAllSession", FieldValue.arrayUnion(newSession));
 //                    db.collection("drivers").document(driverId).update("driverAllSession", FieldValue.arrayUnion(newSession));
 
                         db.collection("drivers").document(driverId).update(("inSession"), false);
                         db.collection("users").document(Objects.requireNonNull(firebaseAuth.getUid())).update("inRide", true);
+
+                        TextView currentDriverName = findViewById(R.id.current_Driver);
+                        db.collection("drivers").document(driverId).get().addOnCompleteListener(task1 -> {
+                            if (task1.isSuccessful()) {
+                                DriverModel driver = task1.getResult().toObject(DriverModel.class);
+                                assert driver != null;
+                                currentDriverName.setText(driver.getName());
+                            }
+                        });
 
                         DocumentReference driver = db.collection("drivers").document(driverId);
                         driver.update("currentGuest", mAuth.getCurrentUser().getUid());
@@ -231,6 +249,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     LinearLayout currentDriveLayout = findViewById(R.id.currentRide);
                     currentDriveLayout.setVisibility(View.VISIBLE);
                     searchView.setVisibility(View.GONE);
+
                 }
                 else{
                     LinearLayout currentDriveLayout = findViewById(R.id.currentRide);
