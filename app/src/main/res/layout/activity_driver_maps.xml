@@ -15,6 +15,7 @@
         tools:context=".Driver.Driver.DriverMapsActivity" />
 
 
+
     <LinearLayout
         android:id="@+id/driver_navigation_bar"
         android:layout_width="match_parent"
@@ -43,44 +44,12 @@
                 android:text="User Found"
                 android:textAlignment="center"
                 android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:background="@drawable/page_navigation_outline"
+                android:backgroundTint="@color/light_blue"/>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:orientation="vertical"
-                android:visibility="gone">
 
-                <TextView
-                    android:id="@+id/current_User"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="User Name"
-                    android:textAlignment="center" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <Button
-                        android:id="@+id/current_Chat_Btn"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="5dp"
-                        android:layout_weight="1"
-                        android:text="Chat" />
-
-                    <Button
-                        android:id="@+id/current_Call_Btn"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="5dp"
-                        android:layout_weight="1"
-                        android:text="Complete ride" />
-                </LinearLayout>
-            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -136,7 +105,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Distant:"
+                    android:text="Distance:"
                     android:textStyle="bold" />
 
                 <TextView
@@ -174,36 +143,64 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:orientation="vertical"
                 android:layout_marginTop="10dp"
                 android:gravity="center">
 
-
-                <Button
-                    android:id="@+id/message_btn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Chat"
-                    android:layout_marginRight="16dp"
-                    android:minWidth="96dp"
-                    android:minHeight="48dp"
-                    android:paddingHorizontal="40dp"
-                    android:paddingVertical="10dp" />
-
                 <Button
                     android:id="@+id/confirm_ride_btn"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Confirm Ride"
                     android:minWidth="96dp"
                     android:minHeight="48dp"
                     android:paddingHorizontal="20dp"
-                    android:paddingVertical="10dp"/>
+                    android:paddingVertical="10dp"
+                    android:visibility="visible"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/current_User"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="User Name"
+                        android:textAlignment="center" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/current_Chat_Btn"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="5dp"
+                            android:layout_weight="1"
+                            android:text="Chat" />
+
+                        <Button
+                            android:id="@+id/driver_confirm_ride"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="5dp"
+                            android:layout_weight="1"
+                            android:text="Complete ride" />
+                    </LinearLayout>
+                </LinearLayout>
+
+
             </LinearLayout>
 
             <Button
                 android:id="@+id/current_Cancel_Btn"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="8dp"
