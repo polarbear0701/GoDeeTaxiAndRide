@@ -73,6 +73,8 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
     Handler handler;
     long refresh = 1000;
     Runnable runnable;
+
+    Button confirmRide;
     private Boolean checkSessionJoin = false;
     private boolean nightMode;
     private SharedPreferences sharedPreferences;
@@ -90,6 +92,8 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
         client = LocationServices.getFusedLocationProviderClient(DriverMapsActivity.this);
 
         super.onCreate(savedInstanceState);
+
+        confirmRide = findViewById(R.id.driver_confirm_ride);
 
 
         com.example.godee.databinding.ActivityDriverMapsBinding binding = com.example.godee.databinding.ActivityDriverMapsBinding.inflate(getLayoutInflater());
@@ -118,8 +122,8 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
 
         }, refresh);
 
-        Button confirmDrive = findViewById(R.id.confirm_ride_btn);
-        confirmDrive.setOnClickListener(v -> {
+
+        confirmRide.setOnClickListener(v -> {
             DocumentReference docRef = db.collection("drivers").document(Objects.requireNonNull(auth.getCurrentUser()).getUid());
             docRef.get().addOnCompleteListener(task -> {
                DriverModel driver = task.getResult().toObject(DriverModel.class);
@@ -149,7 +153,7 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
 
         notifyNewDrive();
 
-        Button driverChatButton = findViewById(R.id.message_btn);
+        Button driverChatButton = findViewById(R.id.current_Chat_Btn);
         driverChatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -292,6 +296,10 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
             if (value != null && value.exists()){
                 docRef.update("latitude", driverCurrentLocationInstance.latitude);
                 docRef.update("longitude", driverCurrentLocationInstance.longitude);
+                LinearLayout inRide = findViewById(R.id.driver_Inride_Btn);
+                inRide.setVisibility(View.VISIBLE);
+                Button confirmRide = findViewById(R.id.driver_confirm_ride);
+                confirmRide.setVisibility(View.GONE);
 
             }
             else{

@@ -45,7 +45,7 @@ dependencies {
     implementation("com.google.firebase:firebase-auth:22.3.0")
     implementation("com.google.firebase:firebase-firestore:24.10.0")
     implementation("com.google.android.gms:play-services-tasks:18.1.0")
-    implementation("com.google.android.gms:play-services-maps:18.2.0")
+    implementation("com.google.android.gms:play-services-maps:18.0.2")
     implementation("com.google.maps:google-maps-services:0.19.0")
     implementation("com.google.firebase:firebase-messaging:23.4.0")
     testImplementation("junit:junit:4.13.2")

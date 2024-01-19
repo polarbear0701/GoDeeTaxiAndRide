@@ -60,6 +60,8 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyA-qGgUm9sSW2Kg8QX47yPofhaiVp14tAs" />
 
+
+
         <activity
             android:name=".Driver.Driver.DriverMapsActivity"
             android:exported="false"
