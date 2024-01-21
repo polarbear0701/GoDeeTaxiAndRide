@@ -14,8 +14,11 @@ import android.location.Geocoder;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,6 +56,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.auth.User;
 import com.google.maps.DirectionsApiRequest;
 import com.google.maps.DistanceMatrixApi;
 import com.google.maps.GeoApiContext;
@@ -217,6 +221,45 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             LinearLayout bookingUI = findViewById(R.id.bookingView);
             bookingUI.setVisibility(View.GONE);
             searchView.setQuery("", false);
+        });
+
+        DocumentReference afterDrive = db.collection("users").document(Objects.requireNonNull(firebaseAuth.getCurrentUser()).getUid());
+        afterDrive.addSnapshotListener((value, error) -> {
+            assert value != null;
+            UserModel user = value.toObject(UserModel.class);
+            LinearLayout currentDriveLayout = findViewById(R.id.currentRide);
+            currentDriveLayout.setVisibility(View.GONE);
+            LinearLayout afterDriveLayout = findViewById(R.id.afterDrive);
+            afterDriveLayout.setVisibility(View.VISIBLE);
+            Button dismissAfterLayout = findViewById(R.id.dismiss_Btn);
+            searchView.setVisibility(View.GONE);
+            Spinner spinner = findViewById(R.id.spinner);
+            ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                    this,
+                    R.array.rating_values,
+                    android.R.layout.simple_spinner_item
+            );
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinner.setAdapter(adapter);
+
+            spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                    String selectedRating = parentView.getItemAtPosition(position).toString();
+                    assert user != null;
+                    db.collection("drivers").document(user.getCurrentDriverID()).update("rating", (Integer.valueOf(selectedRating.charAt(0)) - 48));
+                    Toast.makeText(MapsActivity.this, "Selected Rating: " + (Integer.valueOf(selectedRating.charAt(0)) - 48), Toast.LENGTH_SHORT).show(); //Interger.valueOf is converting back to ASCII, hence the -48 is included
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parentView) {
+                    // Do nothing here
+                }
+            });
+            dismissAfterLayout.setOnClickListener(v -> {
+                afterDriveLayout.setVisibility(View.GONE);
+                searchView.setVisibility(View.VISIBLE);
+            });
         });
 
         DocumentReference checkUserRide = db.collection("users").document(Objects.requireNonNull(firebaseAuth.getCurrentUser()).getUid());

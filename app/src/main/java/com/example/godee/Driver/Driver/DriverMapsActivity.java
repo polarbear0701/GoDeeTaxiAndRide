@@ -148,7 +148,7 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
                 String UID = auth.getUid() + "_" + driver.getCurrentGuest();
                 db.collection("sessions").document(UID).update("statusCode", DriveSession.DriverStatus.COMPLETED);
                 db.collection("drivers").document(Objects.requireNonNull(auth.getCurrentUser()).getUid()).update("currentGuest", "");
-                db.collection("users").document(driver.getCurrentGuest()).update("currentDriver", "");
+//                db.collection("users").document(driver.getCurrentGuest()).update("currentDriver", "");
 
                 db.collection("drivers").document(Objects.requireNonNull(auth.getCurrentUser()).getUid()).update("inSession", true);
                 db.collection("users").document(driver.getCurrentGuest()).update("inRide", false);
