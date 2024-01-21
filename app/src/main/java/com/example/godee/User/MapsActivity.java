@@ -102,6 +102,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         com.example.godee.databinding.ActivityMapsBinding binding = com.example.godee.databinding.ActivityMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         Button confirmBooking = findViewById(R.id.btnConfirmBooking);
+        Button cancelSearch = findViewById(R.id.btnCancelBooking);
+
         confirmBooking.setOnClickListener(v -> {
             Toast.makeText(this, "Booking confirmed", Toast.LENGTH_SHORT).show();
 
@@ -128,7 +130,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     }
                     if (!driverId.equals("")) {
                         Log.d("Min distance", String.valueOf(minDistance) + " " + driverId);
-                        DriveSession newSession = new DriveSession(driverId, Objects.requireNonNull(mAuth.getCurrentUser()).getUid(), userCurrentLocationInstance.latitude, userCurrentLocationInstance.longitude, userDestination.latitude, userDestination.longitude, destinationAddress);
+                        DriveSession newSession = new DriveSession(driverId, Objects.requireNonNull(mAuth.getCurrentUser()).getUid(), userCurrentLocationInstance.latitude, userCurrentLocationInstance.longitude, userDestination.latitude, userDestination.longitude, destinationAddress, price);
 
                         try {
                             db.collection("sessions").document(newSession.getSessionID()).set(newSession);
@@ -200,8 +202,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     drawRoute(userCurrentLocationInstance, latLng);
                     mMap.addMarker(new MarkerOptions().position(latLng).title(location));
                     mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
-                    Toast.makeText(MapsActivity.this, userCurrentLocationInstance.latitude + " " + userCurrentLocationInstance.longitude, Toast.LENGTH_SHORT).show();
-                    Toast.makeText(MapsActivity.this, query, Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(MapsActivity.this, userCurrentLocationInstance.latitude + " " + userCurrentLocationInstance.longitude, Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(MapsActivity.this, query, Toast.LENGTH_SHORT).show();
                 }
                 return false;
             }
@@ -210,6 +212,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 return false;
             }
 
+        });
+        cancelSearch.setOnClickListener(v -> {
+            LinearLayout bookingUI = findViewById(R.id.bookingView);
+            bookingUI.setVisibility(View.GONE);
+            searchView.setQuery("", false);
         });
 
         DocumentReference checkUserRide = db.collection("users").document(Objects.requireNonNull(firebaseAuth.getCurrentUser()).getUid());
@@ -383,7 +390,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         bookingUI.setVisibility(View.VISIBLE);
 
 //        String apiKey = "AIzaSyB8ycsYUrwFVKgsW3aQ8OYx51NPm8TktMc";
-        String apiKey = "AIzaSyCVCXFuUaZxRKVlT-rqh_CmQjBJb_sDUVg";
+        String apiKey = "AIzaSyBIFMe-x7rrZTz0LuuvObxd1EuGaKuqTEk";
         String second = "AIzaSyDOr1sNIfAdOHQ-BuktUDmIL4ySNjLdxL4";
         GeoApiContext context = new GeoApiContext.Builder()
                 .apiKey(apiKey)
@@ -434,7 +441,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     private double matchingAlgorithm(LatLng origin, LatLng destination){
-        String apiKey = "AIzaSyCVCXFuUaZxRKVlT-rqh_CmQjBJb_sDUVg";
+        String apiKey = "AIzaSyBIFMe-x7rrZTz0LuuvObxd1EuGaKuqTEk";
         GeoApiContext context = new GeoApiContext.Builder()
                 .apiKey(apiKey)
                 .build();

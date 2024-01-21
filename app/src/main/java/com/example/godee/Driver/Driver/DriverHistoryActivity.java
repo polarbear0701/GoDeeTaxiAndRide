@@ -34,8 +34,8 @@ public class DriverHistoryActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         driveSessionList = new ArrayList<>();
-        driveSessionList.add(new DriveSession("driverID1", "userID1", 12.345, 67.890, 23.456, 78.901, "Address 1"));
-        driveSessionList.add(new DriveSession("driverID2", "userID2", 34.567, 89.012, 45.678, 90.123, "Address 2"));
+        driveSessionList.add(new DriveSession("driverID1", "userID1", 12.345, 67.890, 23.456, 78.901, "Address 1", 300000));
+        driveSessionList.add(new DriveSession("driverID2", "userID2", 34.567, 89.012, 45.678, 90.123, "Address 2", 300000));
         // Initialize Adapter
         adapter = new HistoryAdapter(driveSessionList);
         recyclerView.setAdapter(adapter);

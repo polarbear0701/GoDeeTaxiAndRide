@@ -73,8 +73,6 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
     Handler handler;
     long refresh = 1000;
     Runnable runnable;
-
-    Button confirmRide;
     private Boolean checkSessionJoin = false;
     private boolean nightMode;
     private SharedPreferences sharedPreferences;
@@ -92,8 +90,6 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
         client = LocationServices.getFusedLocationProviderClient(DriverMapsActivity.this);
 
         super.onCreate(savedInstanceState);
-
-        confirmRide = findViewById(R.id.driver_confirm_ride);
 
 
         com.example.godee.databinding.ActivityDriverMapsBinding binding = com.example.godee.databinding.ActivityDriverMapsBinding.inflate(getLayoutInflater());
@@ -122,6 +118,14 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
 
         }, refresh);
 
+        Button confirmRide;
+        confirmRide = findViewById(R.id.confirm_ride_btn);
+        Button completeRide;
+        completeRide = findViewById(R.id.complete_ride_btn);
+        completeRide.setEnabled(false);
+        Button cancelRide;
+        cancelRide = findViewById(R.id.current_Cancel_Btn);
+
 
         confirmRide.setOnClickListener(v -> {
             DocumentReference docRef = db.collection("drivers").document(Objects.requireNonNull(auth.getCurrentUser()).getUid());
@@ -130,6 +134,58 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
                 assert driver != null;
                 String UID = auth.getUid() + "_" + driver.getCurrentGuest();
                 db.collection("sessions").document(UID).update("statusCode", DriveSession.DriverStatus.ACCEPTED);
+                completeRide.setEnabled(true);
+                confirmRide.setEnabled(false);
+                cancelRide.setEnabled(false);
+            });
+        });
+
+        completeRide.setOnClickListener(v -> {
+            DocumentReference docRef = db.collection("drivers").document(Objects.requireNonNull(auth.getCurrentUser()).getUid());
+            docRef.get().addOnCompleteListener(task -> {
+                DriverModel driver = task.getResult().toObject(DriverModel.class);
+                assert driver != null;
+                String UID = auth.getUid() + "_" + driver.getCurrentGuest();
+                db.collection("sessions").document(UID).update("statusCode", DriveSession.DriverStatus.COMPLETED);
+                db.collection("drivers").document(Objects.requireNonNull(auth.getCurrentUser()).getUid()).update("currentGuest", "");
+                db.collection("users").document(driver.getCurrentGuest()).update("currentDriver", "");
+
+                db.collection("drivers").document(Objects.requireNonNull(auth.getCurrentUser()).getUid()).update("inSession", true);
+                db.collection("users").document(driver.getCurrentGuest()).update("inRide", false);
+                DocumentReference sessionRef = db.collection("sessions").document(UID);
+                sessionRef.get().addOnCompleteListener(task1 -> {
+                    DriveSession session = task1.getResult().toObject(DriveSession.class);
+                    assert session != null;
+                    db.collection("users").document(driver.getCurrentGuest()).update("userAllSession", FieldValue.arrayUnion(session));
+                    db.collection("drivers").document(Objects.requireNonNull(auth.getCurrentUser()).getUid()).update("driverAllSession", FieldValue.arrayUnion(session));
+                });
+                LinearLayout currentRideLayoutDriver = findViewById(R.id.currentRide);
+                currentRideLayoutDriver.setVisibility(View.GONE);
+            });
+
+        });
+
+        cancelRide.setOnClickListener(v -> {
+            DocumentReference docRef = db.collection("drivers").document(Objects.requireNonNull(auth.getCurrentUser()).getUid());
+            docRef.get().addOnCompleteListener(task -> {
+                DriverModel driver = task.getResult().toObject(DriverModel.class);
+                assert driver != null;
+                String UID = auth.getUid() + "_" + driver.getCurrentGuest();
+                db.collection("sessions").document(UID).update("statusCode", DriveSession.DriverStatus.CANCELLED);
+                db.collection("drivers").document(Objects.requireNonNull(auth.getCurrentUser()).getUid()).update("currentGuest", "");
+                db.collection("users").document(driver.getCurrentGuest()).update("currentDriver", "");
+
+                db.collection("drivers").document(Objects.requireNonNull(auth.getCurrentUser()).getUid()).update("inSession", true);
+                db.collection("users").document(driver.getCurrentGuest()).update("inRide", false);
+                DocumentReference sessionRef = db.collection("sessions").document(UID);
+                sessionRef.get().addOnCompleteListener(task1 -> {
+                    DriveSession session = task1.getResult().toObject(DriveSession.class);
+                    assert session != null;
+                    db.collection("users").document(driver.getCurrentGuest()).update("userAllSession", FieldValue.arrayUnion(session));
+                    db.collection("drivers").document(Objects.requireNonNull(auth.getCurrentUser()).getUid()).update("driverAllSession", FieldValue.arrayUnion(session));
+                });
+                LinearLayout currentRideLayoutDriver = findViewById(R.id.currentRide);
+                currentRideLayoutDriver.setVisibility(View.GONE);
             });
         });
 
@@ -253,6 +309,7 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
                 if (size > 0) {
                     Toast.makeText(DriverMapsActivity.this, driver.getDriverAllSession().get(size - 1).getUserID(), Toast.LENGTH_SHORT).show();
                 }
+
             }
         });
     }

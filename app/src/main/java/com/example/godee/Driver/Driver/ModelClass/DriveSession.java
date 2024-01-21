@@ -2,6 +2,10 @@ package com.example.godee.Driver.Driver.ModelClass;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
+
 public class DriveSession {
     public enum DriverStatus{
         PENDING,
@@ -17,10 +21,11 @@ public class DriveSession {
     private double endLocationLatitude;
     private double endLocationLongitude;
     private String addressInString;
-    //    private Date date;
+    private String date;
+    private Double price;
     public DriverStatus statusCode;
 
-    public DriveSession(String driverID, String userID, double startLocationLatitude, double startLocationLongitude, double endLocationLatitude, double endLocationLongitude, String addressInString) {
+    public DriveSession(String driverID, String userID, double startLocationLatitude, double startLocationLongitude, double endLocationLatitude, double endLocationLongitude, String addressInString, double price) {
         this.sessionID = driverID + "_" + userID;
         this.driverID = driverID;
         this.userID = userID;
@@ -30,6 +35,13 @@ public class DriveSession {
         this.endLocationLongitude = endLocationLongitude;
         this.addressInString = addressInString;
         this.statusCode = DriverStatus.PENDING;
+
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int dayOfMonth = calendar.get(Calendar.DATE);
+        this.date = dayOfMonth + "/" + (month + 1) + "/" + year;
+        this.price = price;
     }
 
     public DriveSession() {
@@ -106,5 +118,21 @@ public class DriveSession {
 
     public void setStatusCode(DriverStatus statusCode) {
         this.statusCode = statusCode;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
     }
 }
